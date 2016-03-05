@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 23
@@ -17,10 +18,55 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+    }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
+    final SUPPORT_LIBRARY_VERSION = '23.2.0'
+    final DAGGER_VERSION = '2.0.1'
+    final HAMCREST_VERSION = '1.3'
+    final MOCKITO_VERSION = '1.10.19'
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    //Support Libs
+    compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
+
+    //RxAndroid
+    compile 'io.reactivex:rxandroid:0.25.0'
+
+    //Timber
+    compile 'com.jakewharton.timber:timber:3.1.0'
+
+    //Dagger
+    compile "com.google.dagger:dagger:$DAGGER_VERSION"
+    apt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+
+    //AutoParcel
+    compile 'com.github.frankiesardo:auto-parcel:0.3.1'
+    apt 'com.github.frankiesardo:auto-parcel-processor:0.3.1'
+
+    //ReQuery (database)
+    compile 'io.requery:requery-android:1.0-SNAPSHOT'
+    apt 'io.requery:requery-processor:1.0-SNAPSHOT'
+
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.2.0'
+    testCompile "org.hamcrest:hamcrest-core:$HAMCREST_VERSION"
+    testCompile "org.hamcrest:hamcrest-library:$HAMCREST_VERSION"
+    testCompile "org.hamcrest:hamcrest-integration:$HAMCREST_VERSION"
+    testCompile "org.mockito:mockito-core:$MOCKITO_VERSION"
+
+    androidTestApt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
 }

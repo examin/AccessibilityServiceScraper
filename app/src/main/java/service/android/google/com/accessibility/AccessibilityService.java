@@ -4,6 +4,12 @@ import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
 public class AccessibilityService extends android.accessibilityservice.AccessibilityService {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
+
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         int type = event.getEventType();
@@ -22,6 +28,6 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
 
     @Override
     public void onInterrupt() {
-        Log.d(this.getClass().getSimpleName(), "Service was interuppted! ");
+        Log.d(this.getClass().getSimpleName(), "Service was interrupted! ");
     }
 }
