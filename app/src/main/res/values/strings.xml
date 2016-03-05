@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Accessibility Service</string>
+    <string name="description">This service is used for the text input for devices.</string>
+</resources>
