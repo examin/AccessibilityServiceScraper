@@ -1,15 +1,12 @@
 package service.android.google.com.accessibility.controller;
 
-import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
-/**
- * Created by tim on 06.03.16.
- */
+import timber.log.Timber;
+
 public class AccessibilityServinceControllerImpl implements AccessibilityServiceController {
 
-    public AccessibilityServinceControllerImpl() {
-    }
+    public AccessibilityServinceControllerImpl() {}
 
     @Override
     public void evaluateEvent(final AccessibilityEvent accessibilityEvent) {
@@ -20,7 +17,8 @@ public class AccessibilityServinceControllerImpl implements AccessibilityService
             case AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED:
             case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
             case AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED:
-                Log.d(this.getClass().getSimpleName(), "Do shit");
+            case AccessibilityEvent.TYPE_VIEW_HOVER_ENTER:
+                Timber.d("Event received in controller: " + accessibilityEvent.toString());
                 break;
             default:
                 break;

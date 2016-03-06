@@ -1,8 +1,12 @@
 package service.android.google.com.accessibility.dagger.component;
 
+import javax.inject.Singleton;
+
 import dagger.Component;
+import service.android.google.com.accessibility.AccessibilityService;
 import service.android.google.com.accessibility.dagger.module.AccessibilityModule;
 
+@Singleton
 @Component(
         dependencies = {
                 Graph.class
@@ -12,5 +16,5 @@ import service.android.google.com.accessibility.dagger.module.AccessibilityModul
         }
 )
 public interface AccessibilityComponent {
-    void inject(android.accessibilityservice.AccessibilityService accessibilityService);
+    void inject(AccessibilityService accessibilityService);
 }

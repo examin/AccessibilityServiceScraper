@@ -21,6 +21,7 @@ public class AccessibilityApplication extends Application {
         super.onCreate();
         if (BuildConfig.DEBUG){
             Timber.plant(new Timber.DebugTree());
+            Timber.tag("TAG");
         }
 
         graph = DaggerGraph.Initializer.init(this);
