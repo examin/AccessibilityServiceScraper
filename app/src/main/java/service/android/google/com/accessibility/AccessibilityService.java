@@ -20,6 +20,7 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
         doDaggerInjection();
         super.onServiceConnected();
         Timber.d("AccessibilityService was started!");
+
     }
 
     private void doDaggerInjection() {
