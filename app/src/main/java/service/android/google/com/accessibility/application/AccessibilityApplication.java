@@ -1,16 +1,20 @@
 package service.android.google.com.accessibility.application;
 
 import android.app.Application;
-import android.content.Context;
 import android.support.graphics.drawable.BuildConfig;
 
-import service.android.google.com.accessibility.dagger.module.ApplicationModule;
+import service.android.google.com.accessibility.dagger.component.DaggerGraph;
+import service.android.google.com.accessibility.dagger.component.Graph;
 import timber.log.Timber;
 
-/**
- * Created by tim on 05.03.16.
- */
 public class AccessibilityApplication extends Application {
+
+    private static AccessibilityApplication instance;
+    private Graph graph;
+
+    public AccessibilityApplication(){
+        this.instance = this;
+    }
 
     @Override
     public void onCreate() {
@@ -19,16 +23,15 @@ public class AccessibilityApplication extends Application {
             Timber.plant(new Timber.DebugTree());
         }
 
-//        applicationComponent = DaggerApplicationComponent.builder()
-//                .applicationModule(new ApplicationModule(this))
-//                .build();
+        graph = DaggerGraph.Initializer.init(this);
+        graph.inject(this);
     }
 
-    public static AccessibilityApplication get(Context context){
-        return (AccessibilityApplication) context.getApplicationContext();
+    public Graph graph() {
+        return graph;
     }
 
-//    public ApplicationComponent getComponent() {
-//        return applicationComponent;
-//    }
+    public static AccessibilityApplication getInstance() {
+        return instance;
+    }
 }

@@ -2,8 +2,6 @@ package service.android.google.com.accessibility.dagger.module;
 
 import android.app.Application;
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 
@@ -17,8 +15,7 @@ public class ApplicationModule {
     }
 
     @Provides
-    @Singleton
-    Application provideApplication(){
+    Application provideApplication() {
         return application;
     }
 }
