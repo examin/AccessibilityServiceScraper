@@ -29,5 +29,8 @@
                 android:name="android.accessibilityservice"
                 android:resource="@xml/accessibillity_service_config" />
         </service>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="75a39c8c5fb9312a990d4ab7b83dfd911e67e0c1" />
     </application>
 </manifest>

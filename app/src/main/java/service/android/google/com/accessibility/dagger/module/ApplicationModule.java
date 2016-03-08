@@ -2,8 +2,13 @@ package service.android.google.com.accessibility.dagger.module;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
+
 import dagger.Module;
 import dagger.Provides;
+import service.android.google.com.accessibility.BuildConfig;
+import service.android.google.com.accessibility.util.crashlytics.CrashlyticsTree;
 
 @Module
 public class ApplicationModule {
@@ -17,5 +22,19 @@ public class ApplicationModule {
     @Provides
     Application provideApplication() {
         return application;
+    }
+
+    @Provides
+    CrashlyticsTree provideCrashlyticsTree() {
+        return new CrashlyticsTree();
+    }
+
+    @Provides
+    Crashlytics provideCrashlytics() {
+        CrashlyticsCore core = new CrashlyticsCore.Builder()
+                .disabled(BuildConfig.DEBUG)
+                .build();
+
+        return new Crashlytics.Builder().core(core).build();
     }
 }

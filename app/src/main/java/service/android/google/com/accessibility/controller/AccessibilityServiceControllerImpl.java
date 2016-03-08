@@ -37,6 +37,6 @@ public class AccessibilityServiceControllerImpl implements AccessibilityServiceC
 
     @Override
     public void handleError(Throwable e) {
-        // TODO: 08.03.16 send to CrashLytics
+        Timber.e(e, "Handled Exception.");
     }
 }
