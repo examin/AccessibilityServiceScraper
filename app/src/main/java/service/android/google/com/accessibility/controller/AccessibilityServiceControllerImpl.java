@@ -3,37 +3,18 @@ package service.android.google.com.accessibility.controller;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
-import java.util.concurrent.TimeUnit;
-
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
+import service.android.google.com.accessibility.model.Event;
+import service.android.google.com.accessibility.rx.ObservableFactory;
 import timber.log.Timber;
 
 public class AccessibilityServiceControllerImpl implements AccessibilityServiceController {
+
     private static final String TAG = "TAG";
-    private final PublishSubject<AccessibilityEvent> accessibilityEventPublishSubject = PublishSubject.create();
+    private final PublishSubject<AccessibilityEvent> accessibilityEventPublishSubject;
 
-    public AccessibilityServiceControllerImpl() {
-        accessibilityEventPublishSubject
-                .debounce(400, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<AccessibilityEvent>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(AccessibilityEvent accessibilityEvent) {
-                        Log.d(TAG, accessibilityEvent.toString());
-                    }
-                });
+    public AccessibilityServiceControllerImpl(final ObservableFactory observableFactory) {
+        this.accessibilityEventPublishSubject = observableFactory.createPublishSubjectOfAccessibilityEvents(this);
     }
 
     @Override
@@ -47,5 +28,15 @@ public class AccessibilityServiceControllerImpl implements AccessibilityServiceC
             default:
                 break;
         }
+    }
+
+    @Override
+    public void evaluateEvent(Event event) {
+        Log.d(TAG, event.toString());
+    }
+
+    @Override
+    public void handleError(Throwable e) {
+        // TODO: 08.03.16 send to CrashLytics
     }
 }

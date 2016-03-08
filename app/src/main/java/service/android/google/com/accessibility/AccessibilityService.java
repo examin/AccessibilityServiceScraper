@@ -10,7 +10,7 @@ import service.android.google.com.accessibility.dagger.component.DaggerAccessibi
 import service.android.google.com.accessibility.dagger.module.AccessibilityModule;
 import timber.log.Timber;
 
-public class AccessibilityService extends android.accessibilityservice.AccessibilityService {
+public class AccessibilityService extends android.accessibilityservice.AccessibilityService implements AS {
 
     @Inject
     AccessibilityServiceController accessibilityServiceController;
@@ -20,13 +20,12 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
         doDaggerInjection();
         super.onServiceConnected();
         Timber.d("AccessibilityService was started!");
-
     }
 
     private void doDaggerInjection() {
         DaggerAccessibilityComponent.builder()
                 .graph(AccessibilityApplication.getInstance().graph())
-                .accessibilityModule(new AccessibilityModule())
+                .accessibilityModule(new AccessibilityModule(this))
                 .build()
                 .inject(this);
         Timber.d("Dagger injected!");
