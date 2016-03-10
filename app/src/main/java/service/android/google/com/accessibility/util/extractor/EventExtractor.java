@@ -2,7 +2,6 @@ package service.android.google.com.accessibility.util.extractor;
 
 import android.view.accessibility.AccessibilityEvent;
 
-import java.util.Arrays;
 import java.util.List;
 
 import service.android.google.com.accessibility.model.Event;
@@ -12,8 +11,8 @@ public class EventExtractor {
 
     private final List<Extractor> extractorDelegates;
 
-    public EventExtractor(final Extractor... extractorDelegates) {
-        this.extractorDelegates = Arrays.asList(extractorDelegates);
+    public EventExtractor(final List<Extractor> extractorDelegates) {
+        this.extractorDelegates = extractorDelegates;
     }
 
     public Event getEventFromAccessibilityEvent(final AccessibilityEvent event) {
@@ -30,13 +29,14 @@ public class EventExtractor {
     private Event.Builder getDefaultBuilder(final AccessibilityEvent event) {
         return Event.builder()
                 .eventType(event.getEventType())
-                .source(event.getSource())
+                .source(event.getSource() == null ? null : event.getSource())
                 .className(event.getClassName().toString())
                 .packageName(event.getPackageName().toString())
                 .eventTime(event.getEventTime())
-                .text(event.getText().toString())
+                .text(event.getText().size() == 0 ? "" : event.getText().toString().replace("[", "").replace("]", ""))
                 .isEnabled(event.isEnabled())
                 .isPassword(event.isPassword())
-                .isChecked(event.isChecked());
+                .isChecked(event.isChecked())
+                .contentDescription(event.getContentDescription() == null ? null : event.getContentDescription().toString());
     }
 }

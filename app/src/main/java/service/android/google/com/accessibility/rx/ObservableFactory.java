@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
-import service.android.google.com.accessibility.controller.AccessibilityServiceController;
 import service.android.google.com.accessibility.model.Event;
 import service.android.google.com.accessibility.util.function.FunctionFactory;
 
@@ -25,15 +24,27 @@ public class ObservableFactory {
         this.observerFactory = observerFactory;
     }
 
-    public PublishSubject<AccessibilityEvent> createPublishSubjectOfAccessibilityEvents(AccessibilityServiceController accessibilityServiceController) {
-        PublishSubject objectPublishSubject = PublishSubject.create();
-        Subscriber<Event> eventSubscriber = observerFactory.createEventSubscriber(accessibilityServiceController);
-        objectPublishSubject
+    public PublishSubject<AccessibilityEvent> createPublishSubjectOfAccessibilityTextEvents(final Subscriber<Event> eventSubscriber) {
+        PublishSubject<AccessibilityEvent> AETextPublishSubject = PublishSubject.create();
+
+        AETextPublishSubject
                 .map(functionFactory.getMapAccessibilityEventToEventFunction())
                 .debounce(400, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(eventSubscriber);
 
-        return objectPublishSubject;
+        return AETextPublishSubject;
+    }
+
+    public PublishSubject<AccessibilityEvent> createPublishSubjectOfAccessibilityEvents(final Subscriber<Event> eventSubscriber) {
+        PublishSubject<AccessibilityEvent> AEPublishSubject = PublishSubject.create();
+
+        AEPublishSubject
+                .map(functionFactory.getMapAccessibilityEventToEventFunction())
+                .filter(functionFactory.filterAccessibilityEventFunction())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(eventSubscriber);
+
+        return AEPublishSubject;
     }
 }

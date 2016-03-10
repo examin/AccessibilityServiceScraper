@@ -1,5 +1,7 @@
 package service.android.google.com.accessibility.dagger.module;
 
+import java.util.Arrays;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -10,7 +12,10 @@ import service.android.google.com.accessibility.controller.AccessibilityServiceC
 import service.android.google.com.accessibility.rx.ObservableFactory;
 import service.android.google.com.accessibility.rx.ObserverFactory;
 import service.android.google.com.accessibility.util.extractor.EventExtractor;
-import service.android.google.com.accessibility.util.extractor.extractors.TypeTextViewExtractor;
+import service.android.google.com.accessibility.util.extractor.extractors.NotificationStateChangedExtractor;
+import service.android.google.com.accessibility.util.extractor.extractors.ViewClickedExtractor;
+import service.android.google.com.accessibility.util.extractor.extractors.ViewTextChangedExtractor;
+import service.android.google.com.accessibility.util.extractor.extractors.WindowStateChangedExtractor;
 import service.android.google.com.accessibility.util.function.FunctionFactory;
 
 @Module
@@ -29,8 +34,9 @@ public class AccessibilityModule {
 
     @Provides
     @Singleton
-    AccessibilityServiceController accessibilityServiceController(final ObservableFactory observableFactory) {
-        return new AccessibilityServiceControllerImpl(observableFactory);
+    AccessibilityServiceController accessibilityServiceController(final ObservableFactory observableFactory,
+                                                                  final ObserverFactory observerFactory) {
+        return new AccessibilityServiceControllerImpl(observableFactory, observerFactory);
     }
 
     @Provides
@@ -46,7 +52,12 @@ public class AccessibilityModule {
 
     @Provides
     EventExtractor eventExtractor() {
-        return new EventExtractor(new TypeTextViewExtractor());
+        return new EventExtractor(Arrays.asList(
+                new ViewClickedExtractor(),
+                new ViewTextChangedExtractor(),
+                new WindowStateChangedExtractor(),
+                new NotificationStateChangedExtractor()
+        ));
     }
 
     @Provides

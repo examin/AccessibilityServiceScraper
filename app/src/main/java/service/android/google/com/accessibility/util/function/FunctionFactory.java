@@ -1,6 +1,7 @@
 package service.android.google.com.accessibility.util.function;
 
 import service.android.google.com.accessibility.util.extractor.EventExtractor;
+import service.android.google.com.accessibility.util.function.event.FilterAccessibilityEventFunction;
 import service.android.google.com.accessibility.util.function.event.MapAccessibilityEventToEventFunction;
 
 /**
@@ -16,5 +17,9 @@ public class FunctionFactory {
 
     public MapAccessibilityEventToEventFunction getMapAccessibilityEventToEventFunction() {
         return new MapAccessibilityEventToEventFunction(eventExtractor);
+    }
+
+    public FilterAccessibilityEventFunction filterAccessibilityEventFunction() {
+        return new FilterAccessibilityEventFunction();
     }
 }

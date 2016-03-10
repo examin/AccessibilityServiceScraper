@@ -13,44 +13,60 @@ public abstract class Event implements Parcelable {
         return new AutoParcel_Event.Builder();
     }
 
-    abstract int eventType();
-
-    abstract AccessibilityNodeInfo source();
-
-    abstract String className();
-
-    abstract String packageName();
-
-    abstract long eventTime();
-
-    abstract String text();
-
-    abstract boolean isEnabled();
-
-    abstract boolean isPassword();
-
-    abstract boolean isChecked();
+    public abstract int eventType();
 
     @Nullable
-    abstract int fromIndex();
+    public abstract AccessibilityNodeInfo source();
+
+    public abstract String className();
+
+    public abstract String packageName();
+
+    public abstract long eventTime();
+
+    public abstract String text();
+
+    public abstract boolean isEnabled();
+
+    public abstract boolean isPassword();
+
+    public abstract boolean isChecked();
 
     @Nullable
-    abstract int addedCount();
+    public abstract int fromIndex();
 
     @Nullable
-    abstract int removedCount();
+    public abstract int toIndex();
 
     @Nullable
-    abstract String beforeText();
+    public abstract int addedCount();
 
     @Nullable
-    abstract String contentDescription();
+    public abstract int removedCount();
+
+    @Nullable
+    public abstract int itemCount();
+
+    @Nullable
+    public abstract String beforeText();
+
+    @Nullable
+    public abstract String contentDescription();
+
+    @Nullable
+    public abstract int scrollX();
+
+    @Nullable
+    public abstract int scrollY();
+
+    @Nullable
+    public abstract Parcelable notificationParcel();
 
     public abstract Builder toBuilder();
 
     @Override
     public String toString() {
-        return this.eventTime() + ": [" + this.className() + "] " + this.eventType() + " :" + this.text();
+        return this.eventTime() + ": [" + this.className() + "] " + this.eventType() + " : " + this.text();
     }
 
     @AutoParcel.Builder
@@ -75,6 +91,10 @@ public abstract class Event implements Parcelable {
 
         public abstract Builder fromIndex(final int index);
 
+        public abstract Builder toIndex(final int index);
+
+        public abstract Builder itemCount(final int count);
+
         public abstract Builder addedCount(final int count);
 
         public abstract Builder removedCount(final int count);
@@ -82,6 +102,12 @@ public abstract class Event implements Parcelable {
         public abstract Builder beforeText(final String beforeText);
 
         public abstract Builder contentDescription(final String contentDescription);
+
+        public abstract Builder scrollX(final int scrollX);
+
+        public abstract Builder scrollY(final int scrollY);
+
+        public abstract Builder notificationParcel(final Parcelable notificationPayLoad);
 
         public abstract Event build();
     }

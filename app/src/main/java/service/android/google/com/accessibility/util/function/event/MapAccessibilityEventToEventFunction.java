@@ -6,9 +6,6 @@ import rx.functions.Func1;
 import service.android.google.com.accessibility.model.Event;
 import service.android.google.com.accessibility.util.extractor.EventExtractor;
 
-/**
- * Created by tim on 08.03.16.
- */
 public class MapAccessibilityEventToEventFunction implements Func1<AccessibilityEvent, Event> {
 
     private final EventExtractor eventExtractor;

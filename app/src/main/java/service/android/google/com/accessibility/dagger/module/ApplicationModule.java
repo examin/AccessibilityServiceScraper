@@ -7,7 +7,6 @@ import com.crashlytics.android.core.CrashlyticsCore;
 
 import dagger.Module;
 import dagger.Provides;
-import service.android.google.com.accessibility.BuildConfig;
 import service.android.google.com.accessibility.util.crashlytics.CrashlyticsTree;
 
 @Module
@@ -32,7 +31,7 @@ public class ApplicationModule {
     @Provides
     Crashlytics provideCrashlytics() {
         CrashlyticsCore core = new CrashlyticsCore.Builder()
-                .disabled(BuildConfig.DEBUG)
+                //.disabled(BuildConfig.DEBUG)
                 .build();
 
         return new Crashlytics.Builder().core(core).build();
