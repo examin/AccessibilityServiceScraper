@@ -13,7 +13,7 @@ public class ObserverFactory {
     public ObserverFactory() {
     }
 
-    public Subscriber<Event> createEventSubscriber(AccessibilityServiceController accessibilityServiceController) {
+    public Subscriber<Event> createEventSubscriber(final AccessibilityServiceController accessibilityServiceController) {
         return new EventSubscriber(accessibilityServiceController);
     }
 }

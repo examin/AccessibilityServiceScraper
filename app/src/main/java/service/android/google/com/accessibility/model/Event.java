@@ -7,7 +7,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import auto.parcel.AutoParcel;
 
 @AutoParcel
-public abstract class Event implements Parcelable {
+public abstract class Event implements Parcelable, ASEvent {
 
     public static Builder builder() {
         return new AutoParcel_Event.Builder();

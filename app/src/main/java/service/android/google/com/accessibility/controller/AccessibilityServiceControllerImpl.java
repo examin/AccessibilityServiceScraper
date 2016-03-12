@@ -5,6 +5,7 @@ import android.view.accessibility.AccessibilityEvent;
 
 import rx.Subscriber;
 import rx.subjects.PublishSubject;
+import service.android.google.com.accessibility.model.ASEvent;
 import service.android.google.com.accessibility.model.Event;
 import service.android.google.com.accessibility.rx.ObservableFactory;
 import service.android.google.com.accessibility.rx.ObserverFactory;
@@ -41,12 +42,12 @@ public class AccessibilityServiceControllerImpl implements AccessibilityServiceC
     }
 
     @Override
-    public void evaluateEvent(Event event) {
+    public void evaluateEvent(final ASEvent event) {
         Log.d(TAG, event.toString());
     }
 
     @Override
-    public void handleError(Throwable e) {
+    public void handleError(final Throwable e) {
         Timber.e(e, "Handled Exception.");
     }
 }
