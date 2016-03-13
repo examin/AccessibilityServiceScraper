@@ -5,12 +5,12 @@ import android.view.accessibility.AccessibilityEvent;
 import service.android.google.com.accessibility.model.Event;
 
 /**
- * Created by tim on 09.03.16.
+ * Created by tim on 08.03.16.
+ * Represents the event showing a Notification
  */
-public class NotificationStateChangedExtractor implements Extractor {
-    @Override
-    public boolean isForAccessibilityEvent(AccessibilityEvent event) {
-        return event.getEventType() == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED;
+public class NotificationStateChangedExtractor extends AbstractEventExtractor {
+    public NotificationStateChangedExtractor() {
+        super(AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED);
     }
 
     @Override

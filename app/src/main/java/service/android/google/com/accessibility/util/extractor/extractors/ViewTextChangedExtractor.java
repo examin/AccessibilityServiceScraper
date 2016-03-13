@@ -8,10 +8,9 @@ import service.android.google.com.accessibility.model.Event;
  * Created by tim on 08.03.16.
  * represents the event of changing the text of an EditText.
  */
-public class ViewTextChangedExtractor implements Extractor {
-    @Override
-    public boolean isForAccessibilityEvent(AccessibilityEvent event) {
-        return event.getEventType() == AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED;
+public class ViewTextChangedExtractor extends AbstractEventExtractor {
+    public ViewTextChangedExtractor() {
+        super(AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED);
     }
 
     @Override

@@ -8,11 +8,9 @@ import service.android.google.com.accessibility.model.Event;
  * Created by tim on 09.03.16.
  * represents the event of opening a PopupWindow, Menu, Dialog, etc.
  */
-public class WindowStateChangedExtractor implements Extractor {
-
-    @Override
-    public boolean isForAccessibilityEvent(AccessibilityEvent event) {
-        return event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
+public class WindowStateChangedExtractor extends AbstractEventExtractor {
+    public WindowStateChangedExtractor() {
+        super(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
     }
 
     @Override

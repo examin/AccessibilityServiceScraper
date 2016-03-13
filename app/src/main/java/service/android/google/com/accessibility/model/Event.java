@@ -62,10 +62,14 @@ public abstract class Event implements Parcelable, ASEvent {
     @Nullable
     public abstract Parcelable notificationParcel();
 
+    @Nullable
+    public abstract int currentItemIndex();
+
     public abstract Builder toBuilder();
 
     @Override
     public String toString() {
+        // TODO: 12.03.16 Make a smarter toString() representation for different types.
         return this.eventTime() + ": [" + this.className() + "] " + this.eventType() + " : " + this.text();
     }
 
@@ -108,6 +112,8 @@ public abstract class Event implements Parcelable, ASEvent {
         public abstract Builder scrollY(final int scrollY);
 
         public abstract Builder notificationParcel(final Parcelable notificationPayLoad);
+
+        public abstract Builder currentItemIndex(final int currentItemIndex);
 
         public abstract Event build();
     }

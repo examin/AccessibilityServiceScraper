@@ -7,9 +7,6 @@ import com.crashlytics.android.Crashlytics;
 
 import timber.log.Timber;
 
-/**
- * Created by tim on 08.03.16.
- */
 public class CrashlyticsTree extends Timber.Tree {
     private static final String CRASHLYTICS_KEY_PRIORITY = "priority";
     private static final String CRASHLYTICS_KEY_TAG = "tag";

@@ -8,10 +8,9 @@ import service.android.google.com.accessibility.model.Event;
  * Created by tim on 08.03.16.
  * represents the event of clicking on a View like Button, CompoundButton, etc.
  */
-public class ViewClickedExtractor implements Extractor {
-    @Override
-    public boolean isForAccessibilityEvent(AccessibilityEvent event) {
-        return event.getEventType() == AccessibilityEvent.TYPE_VIEW_CLICKED;
+public class ViewClickedExtractor extends AbstractEventExtractor {
+    public ViewClickedExtractor() {
+        super(AccessibilityEvent.TYPE_VIEW_CLICKED);
     }
 
     @Override

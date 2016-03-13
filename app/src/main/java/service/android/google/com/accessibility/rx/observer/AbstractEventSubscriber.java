@@ -4,7 +4,7 @@ import rx.Subscriber;
 import service.android.google.com.accessibility.controller.AccessibilityServiceController;
 import service.android.google.com.accessibility.model.ASEvent;
 
-public class AbstractEventSubscriber<M extends ASEvent> extends Subscriber<M> {
+public abstract class AbstractEventSubscriber<M extends ASEvent> extends Subscriber<M> {
 
     private final AccessibilityServiceController controller;
 

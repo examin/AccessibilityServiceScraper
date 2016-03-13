@@ -34,7 +34,7 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         Timber.d("AccessibilityEvent was received: " + event.toString());
-        accessibilityServiceController.evaluateEvent(event);
+        accessibilityServiceController.evaluateEvent(getRootInActiveWindow(), event);
     }
 
     @Override

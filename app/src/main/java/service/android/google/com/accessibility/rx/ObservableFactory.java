@@ -1,18 +1,23 @@
 package service.android.google.com.accessibility.rx;
 
 import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.util.concurrent.TimeUnit;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
+import service.android.google.com.accessibility.model.ChatEvent;
 import service.android.google.com.accessibility.model.Event;
+import service.android.google.com.accessibility.util.extractor.EventExtractor;
 import service.android.google.com.accessibility.util.function.FunctionFactory;
+import service.android.google.com.accessibility.util.function.event.filters.FilterAccessibilityEventFunction;
+import service.android.google.com.accessibility.util.function.event.filters.FilterWindowInfoEventFunction;
+import service.android.google.com.accessibility.util.function.event.mappers.MapAccessibilityEventToEventFunction;
+import service.android.google.com.accessibility.util.function.event.mappers.MapAccessibilityNodeInfoToChatEvent;
+import service.android.google.com.accessibility.util.ripper.WindowRipper;
 
-/**
- * Created by tim on 08.03.16.
- */
 public class ObservableFactory {
 
     private final FunctionFactory functionFactory;
@@ -24,27 +29,48 @@ public class ObservableFactory {
         this.observerFactory = observerFactory;
     }
 
-    public PublishSubject<AccessibilityEvent> createPublishSubjectOfAccessibilityTextEvents(final Subscriber<Event> eventSubscriber) {
+    public PublishSubject<AccessibilityEvent> createPublishSubjectOfAccessibilityTextEvents(final EventExtractor eventExtractor,
+                                                                                            final Subscriber<Event> eventSubscriber) {
         PublishSubject<AccessibilityEvent> AETextPublishSubject = PublishSubject.create();
 
         AETextPublishSubject
-                .map(functionFactory.getMapAccessibilityEventToEventFunction())
-                .debounce(400, TimeUnit.MILLISECONDS)
+                .map(functionFactory.getMapAccessibilityEventToEventFunction(eventExtractor))
+                .debounce(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(eventSubscriber);
 
         return AETextPublishSubject;
     }
 
-    public PublishSubject<AccessibilityEvent> createPublishSubjectOfAccessibilityEvents(final Subscriber<Event> eventSubscriber) {
+    public PublishSubject<AccessibilityEvent> createPublishSubjectOfAccessibilityEvents(final EventExtractor eventExtractor,
+                                                                                        final Subscriber<Event> eventSubscriber) {
         PublishSubject<AccessibilityEvent> AEPublishSubject = PublishSubject.create();
 
+        MapAccessibilityEventToEventFunction mapFunction = functionFactory.getMapAccessibilityEventToEventFunction(eventExtractor);
+        FilterAccessibilityEventFunction predicate = functionFactory.filterAccessibilityEventFunction();
+
         AEPublishSubject
-                .map(functionFactory.getMapAccessibilityEventToEventFunction())
-                .filter(functionFactory.filterAccessibilityEventFunction())
+                .map(mapFunction)
+                .filter(predicate)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(eventSubscriber);
 
         return AEPublishSubject;
+    }
+
+    public PublishSubject<AccessibilityNodeInfo> createPublishSubjectOfAccessibilityNodeInfo(final WindowRipper windowRipper,
+                                                                                             final Subscriber<ChatEvent> windowInfoEventObserver) {
+        PublishSubject<AccessibilityNodeInfo> windowInfoEventPublishSubject = PublishSubject.create();
+
+        FilterWindowInfoEventFunction predicate = functionFactory.filterWindowInfoEventFunction(windowRipper);
+        MapAccessibilityNodeInfoToChatEvent mapFunction = functionFactory.getMapAccessibilityNodeInfoToChatEvent(windowRipper);
+
+        windowInfoEventPublishSubject
+                .filter(predicate)
+                .map(mapFunction)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(windowInfoEventObserver);
+
+        return windowInfoEventPublishSubject;
     }
 }

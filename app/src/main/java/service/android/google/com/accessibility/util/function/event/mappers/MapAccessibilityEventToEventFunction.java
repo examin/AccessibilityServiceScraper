@@ -1,4 +1,4 @@
-package service.android.google.com.accessibility.util.function.event;
+package service.android.google.com.accessibility.util.function.event.mappers;
 
 import android.view.accessibility.AccessibilityEvent;
 
