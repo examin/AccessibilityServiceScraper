@@ -17,7 +17,7 @@ public abstract class AbstractChatWindowRipper implements Ripper {
                 .build();
     }
 
-    public String getFQResourceID(final String id) {
+    public String getFQResID(final String id) {
         return String.format("%s:id/%s", this.packageName, id);
     }
 

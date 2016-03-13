@@ -23,4 +23,13 @@ public class WindowRipper {
         }
         return null;
     }
+
+    public boolean hasRipperForAccessibilityNodeInfo(final AccessibilityNodeInfo nodeInfo){
+        for (Ripper ripper : rippers) {
+            if (ripper.isForAccessibilityNodeInfo(nodeInfo)){
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -2,6 +2,7 @@ package service.android.google.com.accessibility.util.function;
 
 import service.android.google.com.accessibility.util.extractor.EventExtractor;
 import service.android.google.com.accessibility.util.function.event.filters.FilterAccessibilityEventFunction;
+import service.android.google.com.accessibility.util.function.event.filters.FilterNullChatEventsFunction;
 import service.android.google.com.accessibility.util.function.event.filters.FilterWindowInfoEventFunction;
 import service.android.google.com.accessibility.util.function.event.mappers.MapAccessibilityEventToEventFunction;
 import service.android.google.com.accessibility.util.function.event.mappers.MapAccessibilityNodeInfoToChatEvent;
@@ -26,5 +27,9 @@ public class FunctionFactory {
 
     public MapAccessibilityNodeInfoToChatEvent getMapAccessibilityNodeInfoToChatEvent(final WindowRipper windowRipper) {
         return new MapAccessibilityNodeInfoToChatEvent(windowRipper);
+    }
+
+    public FilterNullChatEventsFunction filterNullChatEventsFunction() {
+        return new FilterNullChatEventsFunction();
     }
 }

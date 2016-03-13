@@ -18,7 +18,7 @@ public class FilterWindowInfoEventFunction implements Func1<AccessibilityNodeInf
         boolean isValid = true;
 
         isValid = isValid && nodeInfo != null;
-        isValid = isValid && windowRipper.getChatEventFromAccessibilityNodeInfo(nodeInfo) != null;
+        isValid = isValid && windowRipper.hasRipperForAccessibilityNodeInfo(nodeInfo);
 
         return isValid;
     }

@@ -13,6 +13,7 @@ import service.android.google.com.accessibility.model.Event;
 import service.android.google.com.accessibility.util.extractor.EventExtractor;
 import service.android.google.com.accessibility.util.function.FunctionFactory;
 import service.android.google.com.accessibility.util.function.event.filters.FilterAccessibilityEventFunction;
+import service.android.google.com.accessibility.util.function.event.filters.FilterNullChatEventsFunction;
 import service.android.google.com.accessibility.util.function.event.filters.FilterWindowInfoEventFunction;
 import service.android.google.com.accessibility.util.function.event.mappers.MapAccessibilityEventToEventFunction;
 import service.android.google.com.accessibility.util.function.event.mappers.MapAccessibilityNodeInfoToChatEvent;
@@ -59,17 +60,19 @@ public class ObservableFactory {
     }
 
     public PublishSubject<AccessibilityNodeInfo> createPublishSubjectOfAccessibilityNodeInfo(final WindowRipper windowRipper,
-                                                                                             final Subscriber<ChatEvent> windowInfoEventObserver) {
+                                                                                             final Subscriber<ChatEvent> chatEventSubscriber) {
         PublishSubject<AccessibilityNodeInfo> windowInfoEventPublishSubject = PublishSubject.create();
 
         FilterWindowInfoEventFunction predicate = functionFactory.filterWindowInfoEventFunction(windowRipper);
         MapAccessibilityNodeInfoToChatEvent mapFunction = functionFactory.getMapAccessibilityNodeInfoToChatEvent(windowRipper);
+        FilterNullChatEventsFunction predicateNullValues = functionFactory.filterNullChatEventsFunction();
 
         windowInfoEventPublishSubject
                 .filter(predicate)
                 .map(mapFunction)
+                .filter(predicateNullValues)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(windowInfoEventObserver);
+                .subscribe(chatEventSubscriber);
 
         return windowInfoEventPublishSubject;
     }
