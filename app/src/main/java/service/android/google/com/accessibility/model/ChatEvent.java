@@ -1,6 +1,9 @@
 package service.android.google.com.accessibility.model;
 
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
+
+import java.util.List;
 
 import auto.parcel.AutoParcel;
 
@@ -13,9 +16,8 @@ public abstract class ChatEvent implements Parcelable, ASEvent {
 
     public abstract String packageName();
 
-    public abstract String messages();
-
-    public abstract String contactName();
+    @Nullable
+    public abstract List<ChatMessage> messages();
 
     public abstract Builder toBuilder();
 
@@ -23,11 +25,8 @@ public abstract class ChatEvent implements Parcelable, ASEvent {
     public abstract static class Builder {
         public abstract Builder packageName(final String packageName);
 
-        public abstract Builder messages(final String messages);
-
-        public abstract Builder contactName(final String contactName);
+        public abstract Builder messages(final List<ChatMessage> messages);
 
         public abstract ChatEvent build();
-
     }
 }

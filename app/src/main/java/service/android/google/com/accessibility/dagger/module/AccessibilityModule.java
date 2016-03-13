@@ -9,6 +9,7 @@ import dagger.Provides;
 import service.android.google.com.accessibility.AS;
 import service.android.google.com.accessibility.controller.AccessibilityServiceController;
 import service.android.google.com.accessibility.controller.AccessibilityServiceControllerImpl;
+import service.android.google.com.accessibility.model.PackageConstants;
 import service.android.google.com.accessibility.rx.ObservableFactory;
 import service.android.google.com.accessibility.rx.ObserverFactory;
 import service.android.google.com.accessibility.util.extractor.EventExtractor;
@@ -63,9 +64,9 @@ public class AccessibilityModule {
     EventExtractor eventExtractor() {
         return new EventExtractor(Arrays.<Extractor>asList(
                 new ViewClickedExtractor(),
-                new ViewFocusedExtractor(asList("com.google.android.googlequicksearchbox")),
+                new ViewFocusedExtractor(asList(PackageConstants.APP_NEXUS_APP_LAUNCHER)),
                 new ViewTextChangedExtractor(),
-                new WindowStateChangedExtractor(),
+                new WindowStateChangedExtractor(asList(PackageConstants.APP_MESSENGER)),
                 new NotificationStateChangedExtractor()
         ));
     }
