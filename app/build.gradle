@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
+apply plugin: 'de.mobilej.unmock'
 
 android {
     compileSdkVersion 23
@@ -76,4 +77,36 @@ dependencies {
         exclude module: 'objenesis'
     }
     androidTestApt "com.google.dagger:dagger-compiler:2.0.1"
+}
+
+unMock {
+    // URI to download the android-all.jar from. e.g. https://oss.sonatype.org/content/groups/public/org/robolectric/android-all/
+    allAndroid =
+            'https://oss.sonatype.org/content/groups/public/org/robolectric/android-all/4.3_r2-robolectric-0/android-all-4.3_r2-robolectric-0.jar'
+
+    // classes to keep
+    // matched by "startsWith" - you also need to include the dependencies manually
+    // if you start with an "-" the class will match by "equals" (and it will additionally  match
+    // inner classes of this class)
+    keep = [
+            "android.content.Intent",
+            "android.content.ComponentName",
+            "android.content.res.TypedArray",
+            "android.database.Observable",
+            "-android.graphics.drawable.DrawableContainer",
+            "-android.graphics.drawable.StateListDrawable",
+            "android.net.Uri",
+            "android.os.Bundle",
+            "android.support.v7.widget.RecyclerView",
+            "android.text.TextUtils",
+            "android.text.SpannableStringBuilder",
+            "android.text.GraphicsOperations",
+            "android.text.format.DateFormat",
+            "android.util.LruCache",
+            "android.view.LayoutInflater",
+            "android.view.ViewConfiguration",
+            "android.widget.ArrayAdapter",
+            "android.util.SparseBooleanArray",
+            "com.android.internal.util.ArrayUtils"
+    ]
 }

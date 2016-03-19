@@ -11,6 +11,7 @@ import service.android.google.com.accessibility.controller.AccessibilityServiceC
 import service.android.google.com.accessibility.model.Event;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 /**
  * Created by tim on 19.03.16.
@@ -40,6 +41,12 @@ public class AbstractEventSubscriberTest {
         final Event event = ModelBuilder.createEvent();
         mockEventSubscriber.onNext(event);
         verify(controller).evaluateEvent(event);
+    }
+
+    @Test
+    public void test_onComplete() throws Exception {
+        mockEventSubscriber.onCompleted();
+        verifyZeroInteractions(controller);
     }
 
     class MockEventSubscriber extends AbstractEventSubscriber<Event> {

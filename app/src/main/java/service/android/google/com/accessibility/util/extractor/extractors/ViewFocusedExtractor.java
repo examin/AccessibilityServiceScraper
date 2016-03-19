@@ -26,13 +26,12 @@ public class ViewFocusedExtractor extends AbstractEventExtractor {
                 return null;
         }
 
-        // TODO: 13.03.16 Delete debug purposes
-        Event.Builder builder = unfinishedBuilder.itemCount(event.getItemCount());
-        Event.Builder builder1 = builder.currentItemIndex(event.getCurrentItemIndex());
-        Event.Builder builder2 = builder1.scrollX(event.getScrollX());
-        Event.Builder builder3 = builder2.scrollY(event.getScrollY());
-        Event.Builder builder4 = builder3.fromIndex(event.getFromIndex());
-        Event.Builder builder5 = builder4.toIndex(event.getToIndex());
-        return builder5.build();
+        return unfinishedBuilder.itemCount(event.getItemCount())
+                .currentItemIndex(event.getCurrentItemIndex())
+                .scrollX(event.getScrollX())
+                .scrollY(event.getScrollY())
+                .fromIndex(event.getFromIndex())
+                .toIndex(event.getToIndex())
+                .build();
     }
 }
