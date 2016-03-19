@@ -25,34 +25,49 @@ public class MessengerRipper extends AbstractChatWindowRipper {
     /**
      * {@link View} containing the contact information
      */
-    public static final String CONTACT_NAME_RES_ID = "thread_title_name";
+    private static final String CONTACT_NAME_RES_ID = "thread_title_name";
 
     /**
      * {@link LinearLayout} containing views that display different type of messages
-     * Text, Video, Audio, Giphy, ...
+     * Text, Video, Audio, Giphy, Link, ...
      */
-    public static final String MESSAGE_CONTAINER_RES_ID = "message_container";
+    private static final String MESSAGE_CONTAINER_RES_ID = "message_container";
 
     /**
      * {@link TextView} containing solely the text
      */
-    public static final String MESSAGE_TEXT_RES_ID = "message_text";
-
-    /**
-     * {@link View} that show the contact profile picture
-     */
-    public static final String MESSAGE_USER_TILE_RES_ID = "message_user_tile";
+    private static final String MESSAGE_TEXT_RES_ID = "message_text";
 
     /**
      * {@link RelativeLayout} that contains the preview image (inline_video_cover_image) the button
      * for video playback (button_camera_video_play) and the video length (inline_video_status)
      */
-    public static final String MESSAGE_VIDEO_RES_ID = "message_video";
+    private static final String MESSAGE_VIDEO_RES_ID = "message_video";
 
     /**
-     * {@link ImageView} containing the third party app logo. ex.: Giphy
+     * {@link ImageView} containing the third party app logo. ex.: Giphy, GIF Keyboard, ...
      */
-    public static final String MESSAGE_THIRD_PARTY_RES_ID = "app_icon";
+    private static final String MESSAGE_THIRD_PARTY_ICON_RES_ID = "app_icon";
+
+    /***
+     * {@link TextView} containing the name of the third party message.
+     */
+    private static final String MESSAGE_THIRD_PARTY_NAME_RES_ID = "app_name";
+
+    /**
+     * {@link TextView} containing the title for the send link.
+     */
+    private static final String MESSAGE_LINK_TITLE_TEXT = "title_text";
+
+    /**
+     * {@link TextView} containing the description for the send link.
+     */
+    private static final String MESSAGE_LINK_DESCRIPTION_TEXT = "description_text";
+
+    /**
+     * {@link TextView} containing the source (website) for the send link.
+     */
+    private static final String MESSAGE_LINK_SOURCE = "source_text";
     //</editor-fold>
 
     public MessengerRipper() {
@@ -92,10 +107,10 @@ public class MessengerRipper extends AbstractChatWindowRipper {
                 .build();
     }
 
-    private List<ChatMessage> getChatMessagesFromMessageContainer(final List<AccessibilityNodeInfo> message_text_containers) {
-        List<ChatMessage> chatMessages = new ArrayList<>();
-        for (final AccessibilityNodeInfo message_container : message_text_containers) {
-            final boolean contactPersonMessages = isMessageFromContactPerson(message_container);
+    private synchronized List<ChatMessage> getChatMessagesFromMessageContainer(final List<AccessibilityNodeInfo> message_text_containers) {
+        final List<ChatMessage> chatMessages = new ArrayList<>();
+        for (AccessibilityNodeInfo message_container : message_text_containers) {
+            final boolean isMessageFromContact = isMessageFromContactPerson(message_container);
             final String stringifyMessage = getTextFromMessageContainer(message_container);
 
             if (stringifyMessage == null) {
@@ -104,47 +119,64 @@ public class MessengerRipper extends AbstractChatWindowRipper {
 
             chatMessages.add(ChatMessage.builder()
                     .text(stringifyMessage)
-                    .person(contactPersonMessages ? contactPerson : you)
+                    .person(isMessageFromContact ? contactPerson : you)
                     .build());
         }
         return chatMessages;
     }
 
     private boolean isMessageFromContactPerson(final AccessibilityNodeInfo message_container) {
-        return message_container.findAccessibilityNodeInfosByText(MESSAGE_USER_TILE_RES_ID).size() >= 1;
+        return !message_container.isClickable();
     }
 
     private String getTextFromMessageContainer(final AccessibilityNodeInfo message_container) {
         final MessageType typeOfMessage = determineTypeOfMessage(message_container);
 
+        String messageText = null;
+        final AccessibilityNodeInfo parent = message_container.getParent();
         switch (typeOfMessage) {
             case TEXT:
-                message_container.findAccessibilityNodeInfosByText(MESSAGE_TEXT_RES_ID).get(0);
+                messageText = parent.findAccessibilityNodeInfosByViewId(getFQResID(MESSAGE_TEXT_RES_ID)).get(0).getText().toString();
                 break;
             case VIDEO:
-                message_container.findAccessibilityNodeInfosByText(MESSAGE_VIDEO_RES_ID).get(0);
+                messageText = "[VIDEO]";
                 break;
             case THIRD_PARTY:
-                message_container.findAccessibilityNodeInfosByText(MESSAGE_THIRD_PARTY_RES_ID).get(0);
+                messageText = String.format("[THIRD PARTY]: %s",
+                        parent.findAccessibilityNodeInfosByViewId(getFQResID(MESSAGE_THIRD_PARTY_NAME_RES_ID)).get(0).getText());
+                break;
+            case LINK:
+                messageText = String.format("[LINK]: %s %s %s",
+                        parent.findAccessibilityNodeInfosByViewId(getFQResID(MESSAGE_LINK_TITLE_TEXT)).get(0).getText(),
+                        parent.findAccessibilityNodeInfosByViewId(MESSAGE_LINK_DESCRIPTION_TEXT).get(0).getText(),
+                        parent.findAccessibilityNodeInfosByViewId(MESSAGE_LINK_SOURCE).get(0).getText());
                 break;
             case UNKNOWN:
-                return null;
-
+                messageText = "UNKNOWN type";
         }
-        return null;
+        return messageText;
     }
 
     private MessageType determineTypeOfMessage(final AccessibilityNodeInfo message_container) {
-        if (message_container.findAccessibilityNodeInfosByText(MESSAGE_TEXT_RES_ID).size() >= 1) {
+        AccessibilityNodeInfo parent = message_container.getParent();
+        if (parent.findAccessibilityNodeInfosByViewId(getFQResID(MESSAGE_TEXT_RES_ID)).size() >= 1) {
             return MessageType.TEXT;
         }
 
-        if (message_container.findAccessibilityNodeInfosByText(MESSAGE_VIDEO_RES_ID).size() >= 1) {
+        if (parent.findAccessibilityNodeInfosByViewId(getFQResID(MESSAGE_VIDEO_RES_ID)).size() >= 1) {
             return MessageType.VIDEO;
         }
 
-        if (message_container.findAccessibilityNodeInfosByText(MESSAGE_THIRD_PARTY_RES_ID).size() >= 1) {
+        if (parent.findAccessibilityNodeInfosByViewId(getFQResID(MESSAGE_THIRD_PARTY_ICON_RES_ID)).size() >= 1) {
             return MessageType.THIRD_PARTY;
+        }
+
+        if (parent.findAccessibilityNodeInfosByViewId(getFQResID(MESSAGE_LINK_TITLE_TEXT)).size() >= 1) {
+            if (parent.findAccessibilityNodeInfosByViewId(getFQResID(MESSAGE_LINK_DESCRIPTION_TEXT)).size() >= 1) {
+                if (parent.findAccessibilityNodeInfosByViewId(getFQResID(MESSAGE_LINK_SOURCE)).size() >= 1) {
+                    return MessageType.LINK;
+                }
+            }
         }
 
         return MessageType.UNKNOWN;
@@ -154,6 +186,7 @@ public class MessengerRipper extends AbstractChatWindowRipper {
         UNKNOWN,
         TEXT,
         VIDEO,
-        THIRD_PARTY
+        THIRD_PARTY,
+        LINK
     }
 }

@@ -1,7 +1,7 @@
 package service.android.google.com.accessibility.util.function;
 
 import service.android.google.com.accessibility.util.extractor.EventExtractor;
-import service.android.google.com.accessibility.util.function.event.filters.FilterAccessibilityEventFunction;
+import service.android.google.com.accessibility.util.function.event.filters.FilterAccessibilityEventsFunction;
 import service.android.google.com.accessibility.util.function.event.filters.FilterNullChatEventsFunction;
 import service.android.google.com.accessibility.util.function.event.filters.FilterWindowInfoEventFunction;
 import service.android.google.com.accessibility.util.function.event.mappers.MapAccessibilityEventToEventFunction;
@@ -17,8 +17,8 @@ public class FunctionFactory {
         return new MapAccessibilityEventToEventFunction(eventExtractor);
     }
 
-    public FilterAccessibilityEventFunction filterAccessibilityEventFunction() {
-        return new FilterAccessibilityEventFunction();
+    public FilterAccessibilityEventsFunction filterAccessibilityEventFunction() {
+        return new FilterAccessibilityEventsFunction();
     }
 
     public FilterWindowInfoEventFunction filterWindowInfoEventFunction(final WindowRipper windowRipper) {

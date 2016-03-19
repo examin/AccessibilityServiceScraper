@@ -1,13 +1,12 @@
 package service.android.google.com.accessibility.util.function.event.filters;
 
-import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
 import rx.functions.Func1;
 import service.android.google.com.accessibility.model.Event;
 import timber.log.Timber;
 
-public class FilterAccessibilityEventFunction implements Func1<Event, Boolean> {
+public class FilterAccessibilityEventsFunction implements Func1<Event, Boolean> {
 
     @Override
     public Boolean call(Event event) {
@@ -28,7 +27,6 @@ public class FilterAccessibilityEventFunction implements Func1<Event, Boolean> {
         }
 
         Timber.d("AccessibilityEvent was filtered: " + event.toString());
-        Log.d("LOG", "AccessibilityEvent was filtered: " + event.toString());
         return false;
     }
 }

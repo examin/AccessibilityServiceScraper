@@ -13,11 +13,13 @@ import service.android.google.com.accessibility.rx.ObservableFactory;
 import service.android.google.com.accessibility.rx.ObserverFactory;
 import service.android.google.com.accessibility.util.extractor.EventExtractor;
 import service.android.google.com.accessibility.util.ripper.WindowRipper;
+import service.android.google.com.accessibility.util.test.TestOnly;
 import timber.log.Timber;
+
+import static service.android.google.com.accessibility.model.PackageConstants.TAG;
 
 public class AccessibilityServiceControllerImpl implements AccessibilityServiceController {
 
-    private static final String TAG = "TAG";
     private final PublishSubject<AccessibilityEvent> textEventObservable;
     private final PublishSubject<AccessibilityEvent> eventObservable;
     private final PublishSubject<AccessibilityNodeInfo> chatEventObservable;
@@ -34,15 +36,25 @@ public class AccessibilityServiceControllerImpl implements AccessibilityServiceC
         this.chatEventObservable = observableFactory.createPublishSubjectOfAccessibilityNodeInfo(windowRipper, chatEventSubscriber);
     }
 
+    @TestOnly
+    protected AccessibilityServiceControllerImpl(final PublishSubject<AccessibilityEvent> textEventObservable,
+                                                 final PublishSubject<AccessibilityEvent> eventObservable,
+                                                 final PublishSubject<AccessibilityNodeInfo> nodeInfoPublishSubject) {
+        this.textEventObservable = textEventObservable;
+        this.eventObservable = eventObservable;
+        this.chatEventObservable = nodeInfoPublishSubject;
+    }
+
     @Override
     public void evaluateEvent(final AccessibilityNodeInfo rootInActiveWindow,
                               final AccessibilityEvent accessibilityEvent) {
-        int type = accessibilityEvent.getEventType();
+        final int type = accessibilityEvent.getEventType();
         switch (type) {
             case AccessibilityEvent.TYPE_VIEW_CLICKED:
-            case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
-            case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED:
             case AccessibilityEvent.TYPE_VIEW_FOCUSED:
+            case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED:
+            case AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED:
+            case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
                 chatEventObservable.onNext(rootInActiveWindow);
                 eventObservable.onNext(accessibilityEvent);
                 break;

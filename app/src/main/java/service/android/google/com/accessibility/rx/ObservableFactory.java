@@ -12,7 +12,7 @@ import service.android.google.com.accessibility.model.ChatEvent;
 import service.android.google.com.accessibility.model.Event;
 import service.android.google.com.accessibility.util.extractor.EventExtractor;
 import service.android.google.com.accessibility.util.function.FunctionFactory;
-import service.android.google.com.accessibility.util.function.event.filters.FilterAccessibilityEventFunction;
+import service.android.google.com.accessibility.util.function.event.filters.FilterAccessibilityEventsFunction;
 import service.android.google.com.accessibility.util.function.event.filters.FilterNullChatEventsFunction;
 import service.android.google.com.accessibility.util.function.event.filters.FilterWindowInfoEventFunction;
 import service.android.google.com.accessibility.util.function.event.mappers.MapAccessibilityEventToEventFunction;
@@ -48,7 +48,7 @@ public class ObservableFactory {
         PublishSubject<AccessibilityEvent> AEPublishSubject = PublishSubject.create();
 
         MapAccessibilityEventToEventFunction mapFunction = functionFactory.getMapAccessibilityEventToEventFunction(eventExtractor);
-        FilterAccessibilityEventFunction predicate = functionFactory.filterAccessibilityEventFunction();
+        FilterAccessibilityEventsFunction predicate = functionFactory.filterAccessibilityEventFunction();
 
         AEPublishSubject
                 .map(mapFunction)
