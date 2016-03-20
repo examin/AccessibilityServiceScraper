@@ -50,7 +50,8 @@ public class AbstractChatWindowRipperTest {
     @Test
     public void testGetContactPersonFromName() throws Exception {
         String contactName = "John Doe";
-        assertThat(abstractChatWindowRipper.getContactPersonFromName(contactName).fullName(), is(contactName));
+        abstractChatWindowRipper.setContactPersonFromName(contactName);
+        assertThat(abstractChatWindowRipper.getContactPerson().fullName(), is(contactName));
     }
 
     @Test

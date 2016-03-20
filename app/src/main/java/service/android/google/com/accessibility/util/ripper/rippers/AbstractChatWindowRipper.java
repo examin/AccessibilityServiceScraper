@@ -8,7 +8,7 @@ public abstract class AbstractChatWindowRipper implements Ripper {
 
     private final Person you;
     private final String packageName;
-    protected Person contactPerson;
+    private Person contactPerson;
 
     public AbstractChatWindowRipper(final String packageName) {
         this.packageName = packageName;
@@ -25,8 +25,12 @@ public abstract class AbstractChatWindowRipper implements Ripper {
         return String.format("%s:id/%s", this.packageName, id);
     }
 
-    protected Person getContactPersonFromName(final String fullContactName) {
-        return Person.builder()
+    public Person getContactPerson() {
+        return contactPerson;
+    }
+
+    protected void setContactPersonFromName(final String fullContactName) {
+        this.contactPerson = Person.builder()
                 .fullName(fullContactName)
                 .build();
     }
