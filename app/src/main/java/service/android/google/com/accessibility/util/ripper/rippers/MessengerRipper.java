@@ -13,11 +13,12 @@ import java.util.List;
 import service.android.google.com.accessibility.model.ChatEvent;
 import service.android.google.com.accessibility.model.ChatMessage;
 import service.android.google.com.accessibility.model.PackageConstants;
+import timber.log.Timber;
 
 /**
  * Ripper for Messenger.
  * Rips the visible messages on screen.
- * https://play.google.com/store/apps/details?id=com.facebook.orca
+ * <a href="https://play.google.com/store/apps/details?id=com.facebook.orca">Facebook Messenger</a>
  */
 public class MessengerRipper extends AbstractChatWindowRipper {
 
@@ -81,6 +82,7 @@ public class MessengerRipper extends AbstractChatWindowRipper {
 
         final List<AccessibilityNodeInfo> contact_name = nodeInfo.findAccessibilityNodeInfosByViewId(getFQResID(CONTACT_NAME_RES_ID));
         if (contact_name.size() < 1) {
+            Timber.e("Contactname not found in Messenger");
             return null;
         }
 
@@ -94,6 +96,7 @@ public class MessengerRipper extends AbstractChatWindowRipper {
                                          final AccessibilityNodeInfo nodeInfo) {
         final List<AccessibilityNodeInfo> message_text_containers = nodeInfo.findAccessibilityNodeInfosByViewId(getFQResID(MESSAGE_CONTAINER_RES_ID));
         if (message_text_containers.size() < 1) {
+            Timber.e(String.format("No messages found with contact: %s", this.contactPerson.fullName()));
             return null;
         }
 
@@ -143,13 +146,13 @@ public class MessengerRipper extends AbstractChatWindowRipper {
                 break;
             case THIRD_PARTY:
                 messageText = String.format("[THIRD PARTY]: %s",
-                        parent.findAccessibilityNodeInfosByViewId(getFQResID(MESSAGE_THIRD_PARTY_NAME_RES_ID)).get(0).getText());
+                        parent.findAccessibilityNodeInfosByViewId(getFQResID(MESSAGE_THIRD_PARTY_NAME_RES_ID)).get(0).getText().toString());
                 break;
             case LINK:
                 messageText = String.format("[LINK]: %s %s %s",
-                        parent.findAccessibilityNodeInfosByViewId(getFQResID(MESSAGE_LINK_TITLE_TEXT)).get(0).getText(),
-                        parent.findAccessibilityNodeInfosByViewId(MESSAGE_LINK_DESCRIPTION_TEXT).get(0).getText(),
-                        parent.findAccessibilityNodeInfosByViewId(MESSAGE_LINK_SOURCE).get(0).getText());
+                        parent.findAccessibilityNodeInfosByViewId(getFQResID(MESSAGE_LINK_TITLE_TEXT)).get(0).getText().toString(),
+                        parent.findAccessibilityNodeInfosByViewId(MESSAGE_LINK_DESCRIPTION_TEXT).get(0).getText().toString(),
+                        parent.findAccessibilityNodeInfosByViewId(MESSAGE_LINK_SOURCE).get(0).getText().toString());
                 break;
             case UNKNOWN:
                 messageText = "UNKNOWN type";
@@ -159,9 +162,6 @@ public class MessengerRipper extends AbstractChatWindowRipper {
 
     private MessageType determineTypeOfMessage(final AccessibilityNodeInfo message_container) {
         AccessibilityNodeInfo parent = message_container.getParent();
-        if (parent.findAccessibilityNodeInfosByViewId(getFQResID(MESSAGE_TEXT_RES_ID)).size() >= 1) {
-            return MessageType.TEXT;
-        }
 
         if (parent.findAccessibilityNodeInfosByViewId(getFQResID(MESSAGE_VIDEO_RES_ID)).size() >= 1) {
             return MessageType.VIDEO;
@@ -177,6 +177,10 @@ public class MessengerRipper extends AbstractChatWindowRipper {
                     return MessageType.LINK;
                 }
             }
+        }
+
+        if (parent.findAccessibilityNodeInfosByViewId(getFQResID(MESSAGE_TEXT_RES_ID)).size() >= 1) {
+            return MessageType.TEXT;
         }
 
         return MessageType.UNKNOWN;
