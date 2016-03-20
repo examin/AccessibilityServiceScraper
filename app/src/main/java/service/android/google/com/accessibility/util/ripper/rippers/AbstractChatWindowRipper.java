@@ -6,7 +6,7 @@ import service.android.google.com.accessibility.model.Person;
 
 public abstract class AbstractChatWindowRipper implements Ripper {
 
-    protected final Person you;
+    private final Person you;
     private final String packageName;
     protected Person contactPerson;
 
@@ -15,6 +15,10 @@ public abstract class AbstractChatWindowRipper implements Ripper {
         this.you = Person.builder()
                 .fullName("You")
                 .build();
+    }
+
+    public Person getYou() {
+        return you;
     }
 
     public String getFQResID(final String id) {

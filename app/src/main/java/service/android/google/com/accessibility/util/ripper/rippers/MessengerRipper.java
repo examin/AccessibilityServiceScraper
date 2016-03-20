@@ -122,7 +122,7 @@ public class MessengerRipper extends AbstractChatWindowRipper {
 
             chatMessages.add(ChatMessage.builder()
                     .text(stringifyMessage)
-                    .person(isMessageFromContact ? contactPerson : you)
+                    .person(isMessageFromContact ? contactPerson : getYou())
                     .build());
         }
         return chatMessages;
