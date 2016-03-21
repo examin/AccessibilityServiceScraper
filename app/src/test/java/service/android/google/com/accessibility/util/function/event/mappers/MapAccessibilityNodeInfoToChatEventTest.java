@@ -10,7 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import service.android.google.com.accessibility.ModelBuilder;
 import service.android.google.com.accessibility.model.ChatEvent;
-import service.android.google.com.accessibility.util.ripper.WindowRipper;
+import service.android.google.com.accessibility.scraper.WindowRipper;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;

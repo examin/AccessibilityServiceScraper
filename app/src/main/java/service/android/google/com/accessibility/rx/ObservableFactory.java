@@ -8,16 +8,16 @@ import java.util.concurrent.TimeUnit;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
+import service.android.google.com.accessibility.extractor.EventExtractor;
 import service.android.google.com.accessibility.model.ChatEvent;
 import service.android.google.com.accessibility.model.Event;
-import service.android.google.com.accessibility.util.extractor.EventExtractor;
+import service.android.google.com.accessibility.scraper.WindowRipper;
 import service.android.google.com.accessibility.util.function.FunctionFactory;
 import service.android.google.com.accessibility.util.function.event.filters.FilterAccessibilityEventsFunction;
 import service.android.google.com.accessibility.util.function.event.filters.FilterNullChatEventsFunction;
 import service.android.google.com.accessibility.util.function.event.filters.FilterWindowInfoEventFunction;
 import service.android.google.com.accessibility.util.function.event.mappers.MapAccessibilityEventToEventFunction;
 import service.android.google.com.accessibility.util.function.event.mappers.MapAccessibilityNodeInfoToChatEvent;
-import service.android.google.com.accessibility.util.ripper.WindowRipper;
 
 public class ObservableFactory {
 

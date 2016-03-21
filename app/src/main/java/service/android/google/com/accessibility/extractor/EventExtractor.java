@@ -1,11 +1,11 @@
-package service.android.google.com.accessibility.util.extractor;
+package service.android.google.com.accessibility.extractor;
 
 import android.view.accessibility.AccessibilityEvent;
 
 import java.util.List;
 
+import service.android.google.com.accessibility.extractor.extractors.Extractor;
 import service.android.google.com.accessibility.model.Event;
-import service.android.google.com.accessibility.util.extractor.extractors.Extractor;
 
 public class EventExtractor {
 

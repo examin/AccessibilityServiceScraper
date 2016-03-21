@@ -1,4 +1,4 @@
-package service.android.google.com.accessibility.util.extractor;
+package service.android.google.com.accessibility.extractor;
 
 import android.view.accessibility.AccessibilityEvent;
 
@@ -10,8 +10,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Arrays;
 
+import service.android.google.com.accessibility.extractor.extractors.Extractor;
 import service.android.google.com.accessibility.model.Event;
-import service.android.google.com.accessibility.util.extractor.extractors.Extractor;
 
 /**
  * @author Created by trijckaert

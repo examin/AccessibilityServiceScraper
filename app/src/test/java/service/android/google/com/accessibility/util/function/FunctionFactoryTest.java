@@ -6,8 +6,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import service.android.google.com.accessibility.util.extractor.EventExtractor;
-import service.android.google.com.accessibility.util.ripper.WindowRipper;
+import service.android.google.com.accessibility.extractor.EventExtractor;
+import service.android.google.com.accessibility.scraper.WindowRipper;
 
 import static junit.framework.Assert.assertNotNull;
 

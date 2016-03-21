@@ -1,12 +1,12 @@
 package service.android.google.com.accessibility.util.function;
 
-import service.android.google.com.accessibility.util.extractor.EventExtractor;
+import service.android.google.com.accessibility.extractor.EventExtractor;
+import service.android.google.com.accessibility.scraper.WindowRipper;
 import service.android.google.com.accessibility.util.function.event.filters.FilterAccessibilityEventsFunction;
 import service.android.google.com.accessibility.util.function.event.filters.FilterNullChatEventsFunction;
 import service.android.google.com.accessibility.util.function.event.filters.FilterWindowInfoEventFunction;
 import service.android.google.com.accessibility.util.function.event.mappers.MapAccessibilityEventToEventFunction;
 import service.android.google.com.accessibility.util.function.event.mappers.MapAccessibilityNodeInfoToChatEvent;
-import service.android.google.com.accessibility.util.ripper.WindowRipper;
 
 public class FunctionFactory {
 

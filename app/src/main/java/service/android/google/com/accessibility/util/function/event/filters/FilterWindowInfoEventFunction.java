@@ -3,7 +3,7 @@ package service.android.google.com.accessibility.util.function.event.filters;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import rx.functions.Func1;
-import service.android.google.com.accessibility.util.ripper.WindowRipper;
+import service.android.google.com.accessibility.scraper.WindowRipper;
 
 public class FilterWindowInfoEventFunction implements Func1<AccessibilityNodeInfo, Boolean> {
 

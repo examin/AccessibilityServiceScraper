@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import service.android.google.com.accessibility.util.ripper.WindowRipper;
+import service.android.google.com.accessibility.scraper.WindowRipper;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;

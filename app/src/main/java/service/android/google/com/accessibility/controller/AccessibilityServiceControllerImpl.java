@@ -6,13 +6,13 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import rx.Subscriber;
 import rx.subjects.PublishSubject;
+import service.android.google.com.accessibility.extractor.EventExtractor;
 import service.android.google.com.accessibility.model.ASEvent;
 import service.android.google.com.accessibility.model.ChatEvent;
 import service.android.google.com.accessibility.model.Event;
 import service.android.google.com.accessibility.rx.ObservableFactory;
 import service.android.google.com.accessibility.rx.ObserverFactory;
-import service.android.google.com.accessibility.util.extractor.EventExtractor;
-import service.android.google.com.accessibility.util.ripper.WindowRipper;
+import service.android.google.com.accessibility.scraper.WindowRipper;
 import service.android.google.com.accessibility.util.test.TestOnly;
 import timber.log.Timber;
 

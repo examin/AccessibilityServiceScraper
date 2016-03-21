@@ -3,8 +3,8 @@ package service.android.google.com.accessibility.util.function.event.mappers;
 import android.view.accessibility.AccessibilityEvent;
 
 import rx.functions.Func1;
+import service.android.google.com.accessibility.extractor.EventExtractor;
 import service.android.google.com.accessibility.model.Event;
-import service.android.google.com.accessibility.util.extractor.EventExtractor;
 
 public class MapAccessibilityEventToEventFunction implements Func1<AccessibilityEvent, Event> {
 

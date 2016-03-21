@@ -10,8 +10,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import service.android.google.com.accessibility.ModelBuilder;
+import service.android.google.com.accessibility.extractor.EventExtractor;
 import service.android.google.com.accessibility.model.Event;
-import service.android.google.com.accessibility.util.extractor.EventExtractor;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;

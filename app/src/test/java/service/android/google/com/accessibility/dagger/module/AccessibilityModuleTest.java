@@ -7,11 +7,11 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import service.android.google.com.accessibility.AS;
+import service.android.google.com.accessibility.extractor.EventExtractor;
 import service.android.google.com.accessibility.rx.ObservableFactory;
 import service.android.google.com.accessibility.rx.ObserverFactory;
-import service.android.google.com.accessibility.util.extractor.EventExtractor;
+import service.android.google.com.accessibility.scraper.WindowRipper;
 import service.android.google.com.accessibility.util.function.FunctionFactory;
-import service.android.google.com.accessibility.util.ripper.WindowRipper;
 
 import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.MatcherAssert.assertThat;

@@ -1,4 +1,4 @@
-package service.android.google.com.accessibility.util.extractor.extractors;
+package service.android.google.com.accessibility.extractor.extractors;
 
 import android.view.accessibility.AccessibilityEvent;
 

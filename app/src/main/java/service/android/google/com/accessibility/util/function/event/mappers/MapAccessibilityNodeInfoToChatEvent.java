@@ -4,7 +4,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import rx.functions.Func1;
 import service.android.google.com.accessibility.model.ChatEvent;
-import service.android.google.com.accessibility.util.ripper.WindowRipper;
+import service.android.google.com.accessibility.scraper.WindowRipper;
 
 public class MapAccessibilityNodeInfoToChatEvent implements Func1<AccessibilityNodeInfo, ChatEvent> {
     private final WindowRipper windowRipper;
