@@ -48,6 +48,8 @@ dependencies {
     compile "com.android.support:support-annotations:23.2.0"
     //RxAndroid
     compile 'io.reactivex:rxandroid:0.25.0'
+    //RxCupboard
+    compile 'nl.2312:rxcupboard:0.7'
     //Timber
     compile 'com.jakewharton.timber:timber:3.1.0'
     //Dagger
