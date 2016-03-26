@@ -6,7 +6,7 @@ import rx.functions.Func1;
 import service.android.google.com.accessibility.model.Event;
 import timber.log.Timber;
 
-public class FilterAccessibilityEventsFunction implements Func1<Event, Boolean> {
+public class FilterUnnecessaryAccessibilityEventsFunction implements Func1<Event, Boolean> {
 
     @Override
     public Boolean call(Event event) {

@@ -10,6 +10,7 @@ import service.android.google.com.accessibility.AS;
 import service.android.google.com.accessibility.extractor.EventExtractor;
 import service.android.google.com.accessibility.rx.ObservableFactory;
 import service.android.google.com.accessibility.rx.ObserverFactory;
+import service.android.google.com.accessibility.rx.util.SchedulerFactory;
 import service.android.google.com.accessibility.scraper.WindowRipper;
 import service.android.google.com.accessibility.util.function.FunctionFactory;
 
@@ -37,6 +38,8 @@ public class AccessibilityModuleTest {
     private WindowRipper windowRipper;
     @Mock
     private FunctionFactory functionFactory;
+    @Mock
+    private SchedulerFactory schedulerFactory;
 
     @Before
     public void setUp() throws Exception {
@@ -52,10 +55,8 @@ public class AccessibilityModuleTest {
     public void test_accessibilityServiceController() throws Exception {
         assertNotNull(
                 accessibilityModule.accessibilityServiceController(
-                        observableFactory,
-                        observerFactory,
-                        eventExtractor,
-                        windowRipper)
+                        observableFactory
+                )
         );
     }
 
@@ -64,7 +65,10 @@ public class AccessibilityModuleTest {
         assertNotNull(
                 accessibilityModule.observableFactory(
                         functionFactory,
-                        observerFactory
+                        observerFactory,
+                        schedulerFactory,
+                        eventExtractor,
+                        windowRipper
                 )
         );
     }
@@ -95,6 +99,12 @@ public class AccessibilityModuleTest {
         assertNotNull(
                 accessibilityModule.observerFactory()
         );
+    }
 
+    @Test
+    public void test_schedulerFactory() throws Exception {
+        assertNotNull(
+                accessibilityModule.schedulerFactory()
+        );
     }
 }

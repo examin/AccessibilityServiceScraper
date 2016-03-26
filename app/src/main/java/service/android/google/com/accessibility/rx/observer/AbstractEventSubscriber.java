@@ -1,15 +1,15 @@
 package service.android.google.com.accessibility.rx.observer;
 
 import rx.Subscriber;
-import service.android.google.com.accessibility.controller.AccessibilityServiceController;
+import service.android.google.com.accessibility.AS;
 import service.android.google.com.accessibility.model.ASEvent;
 
 public abstract class AbstractEventSubscriber<M extends ASEvent> extends Subscriber<M> {
 
-    private final AccessibilityServiceController controller;
+    private final AS accessibilityService;
 
-    public AbstractEventSubscriber(final AccessibilityServiceController controller) {
-        this.controller = controller;
+    public AbstractEventSubscriber(final AS accessibilityService) {
+        this.accessibilityService = accessibilityService;
     }
 
     @Override
@@ -18,11 +18,11 @@ public abstract class AbstractEventSubscriber<M extends ASEvent> extends Subscri
 
     @Override
     public void onError(Throwable e) {
-        controller.handleError(e);
+        accessibilityService.handleError(e);
     }
 
     @Override
     public void onNext(M m) {
-        controller.evaluateEvent(m);
+        accessibilityService.evaluateEvent(m);
     }
 }

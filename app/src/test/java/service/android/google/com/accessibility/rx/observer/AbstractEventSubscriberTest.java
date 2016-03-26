@@ -6,8 +6,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import service.android.google.com.accessibility.AS;
 import service.android.google.com.accessibility.ModelBuilder;
-import service.android.google.com.accessibility.controller.AccessibilityServiceController;
 import service.android.google.com.accessibility.model.Event;
 
 import static org.mockito.Mockito.verify;
@@ -22,36 +22,36 @@ public class AbstractEventSubscriberTest {
     private MockEventSubscriber mockEventSubscriber;
 
     @Mock
-    private AccessibilityServiceController controller;
+    private AS accessibilityService;
 
     @Before
     public void setUp() throws Exception {
-        mockEventSubscriber = new MockEventSubscriber(controller);
-    }
-
-    @Test
-    public void test_onError() throws Exception {
-        final Exception e = new Exception();
-        mockEventSubscriber.onError(e);
-        verify(controller).handleError(e);
+        mockEventSubscriber = new MockEventSubscriber(accessibilityService);
     }
 
     @Test
     public void test_onNext() throws Exception {
         final Event event = ModelBuilder.createEvent();
         mockEventSubscriber.onNext(event);
-        verify(controller).evaluateEvent(event);
+        verify(accessibilityService).evaluateEvent(event);
     }
 
     @Test
     public void test_onComplete() throws Exception {
         mockEventSubscriber.onCompleted();
-        verifyZeroInteractions(controller);
+        verifyZeroInteractions(accessibilityService);
+    }
+
+    @Test
+    public void test_onError() throws Exception {
+        final Exception mockception = new Exception("Mockception");
+        mockEventSubscriber.onError(mockception);
+        verify(accessibilityService).handleError(mockception);
     }
 
     class MockEventSubscriber extends AbstractEventSubscriber<Event> {
-        public MockEventSubscriber(AccessibilityServiceController controller) {
-            super(controller);
+        public MockEventSubscriber(AS accessibilityService) {
+            super(accessibilityService);
         }
     }
 }

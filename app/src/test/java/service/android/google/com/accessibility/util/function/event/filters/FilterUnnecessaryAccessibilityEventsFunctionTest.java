@@ -18,9 +18,9 @@ import static org.mockito.Mockito.when;
  * @author Created by trijckaert
  */
 @RunWith(MockitoJUnitRunner.class)
-public class FilterAccessibilityEventsFunctionTest {
+public class FilterUnnecessaryAccessibilityEventsFunctionTest {
 
-    private FilterAccessibilityEventsFunction filterAccessibilityEventsFunction;
+    private FilterUnnecessaryAccessibilityEventsFunction filterUnnecessaryAccessibilityEventsFunction;
 
     private String emptyTextString = "";
 
@@ -30,35 +30,35 @@ public class FilterAccessibilityEventsFunctionTest {
     @Before
     public void setUp() throws Exception {
         when(event.text()).thenReturn(emptyTextString);
-        filterAccessibilityEventsFunction = new FilterAccessibilityEventsFunction();
+        filterUnnecessaryAccessibilityEventsFunction = new FilterUnnecessaryAccessibilityEventsFunction();
     }
 
     @Test
     public void testCall_eventIsNull_shouldReturnFalse() throws Exception {
-        assertFalse(filterAccessibilityEventsFunction.call(null));
+        assertFalse(filterUnnecessaryAccessibilityEventsFunction.call(null));
     }
 
     @Test
     public void testCall_eventIsOfType_TYPE_NOTIFICATION_STATE_CHANGED_shouldReturnTrue() throws Exception {
         when(event.eventType()).thenReturn(AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED);
-        assertTrue(filterAccessibilityEventsFunction.call(event));
+        assertTrue(filterUnnecessaryAccessibilityEventsFunction.call(event));
     }
 
     @Test
     public void test_eventIsOfType_TYPE_VIEW_FOCUSED_shouldReturnTrue() throws Exception {
         when(event.eventType()).thenReturn(AccessibilityEvent.TYPE_VIEW_FOCUSED);
-        assertTrue(filterAccessibilityEventsFunction.call(event));
+        assertTrue(filterUnnecessaryAccessibilityEventsFunction.call(event));
     }
 
     @Test
     public void test_eventHasText_shouldReturnTrue() throws Exception {
         when(event.text()).thenReturn("non empty text");
-        assertTrue(filterAccessibilityEventsFunction.call(event));
+        assertTrue(filterUnnecessaryAccessibilityEventsFunction.call(event));
     }
 
     @Test
     public void test_eventIsOfUnknownType_shouldReturnFalse() throws Exception {
         when(event.eventType()).thenReturn(235675432);
-        assertFalse(filterAccessibilityEventsFunction.call(event));
+        assertFalse(filterUnnecessaryAccessibilityEventsFunction.call(event));
     }
 }

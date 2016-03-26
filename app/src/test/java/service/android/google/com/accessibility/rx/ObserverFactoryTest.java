@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import service.android.google.com.accessibility.controller.AccessibilityServiceController;
+import service.android.google.com.accessibility.AS;
 
 import static junit.framework.Assert.assertNotNull;
 
@@ -19,20 +19,20 @@ public class ObserverFactoryTest {
     private ObserverFactory observerFactory;
 
     @Mock
-    private AccessibilityServiceController controller;
+    private AS accessibilityService;
 
     @Before
     public void setUp() throws Exception {
-        observerFactory = new ObserverFactory();
+        observerFactory = new ObserverFactory(accessibilityService);
     }
 
     @Test
     public void test_createEventSubscriber() throws Exception {
-        assertNotNull(observerFactory.createEventSubscriber(controller));
+        assertNotNull(observerFactory.createEventSubscriber());
     }
 
     @Test
     public void test_createWindowInfoEventSubscriber() throws Exception {
-        assertNotNull(observerFactory.createWindowInfoEventSubscriber(controller));
+        assertNotNull(observerFactory.createWindowInfoEventSubscriber());
     }
 }

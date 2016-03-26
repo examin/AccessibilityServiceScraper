@@ -19,6 +19,7 @@ import service.android.google.com.accessibility.extractor.extractors.WindowState
 import service.android.google.com.accessibility.model.PackageConstants;
 import service.android.google.com.accessibility.rx.ObservableFactory;
 import service.android.google.com.accessibility.rx.ObserverFactory;
+import service.android.google.com.accessibility.rx.util.SchedulerFactory;
 import service.android.google.com.accessibility.scraper.WindowRipper;
 import service.android.google.com.accessibility.scraper.scrapers.MessengerScraper;
 import service.android.google.com.accessibility.scraper.scrapers.Scraper;
@@ -42,17 +43,22 @@ public class AccessibilityModule {
 
     @Provides
     @Singleton
-    AccessibilityServiceController accessibilityServiceController(final ObservableFactory observableFactory,
-                                                                  final ObserverFactory observerFactory,
-                                                                  final EventExtractor eventExtractor,
-                                                                  final WindowRipper windowRipper) {
-        return new AccessibilityServiceControllerImpl(observableFactory, observerFactory, eventExtractor, windowRipper);
+    AccessibilityServiceController accessibilityServiceController(final ObservableFactory observableFactory) {
+        return new AccessibilityServiceControllerImpl(observableFactory);
     }
 
     @Provides
     ObservableFactory observableFactory(final FunctionFactory functionFactory,
-                                        final ObserverFactory observerFactory) {
-        return new ObservableFactory(functionFactory, observerFactory);
+                                        final ObserverFactory observerFactory,
+                                        final SchedulerFactory schedulerFactory,
+                                        final EventExtractor eventExtractor,
+                                        final WindowRipper windowRipper) {
+        return new ObservableFactory(functionFactory, observerFactory, schedulerFactory, eventExtractor, windowRipper);
+    }
+
+    @Provides
+    SchedulerFactory schedulerFactory() {
+        return new SchedulerFactory();
     }
 
     @Provides
@@ -80,6 +86,6 @@ public class AccessibilityModule {
 
     @Provides
     ObserverFactory observerFactory() {
-        return new ObserverFactory();
+        return new ObserverFactory(accessibilityService);
     }
 }

@@ -1,22 +1,13 @@
 package service.android.google.com.accessibility.controller;
 
-import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
-import rx.Subscriber;
 import rx.subjects.PublishSubject;
-import service.android.google.com.accessibility.extractor.EventExtractor;
 import service.android.google.com.accessibility.model.ASEvent;
-import service.android.google.com.accessibility.model.ChatEvent;
-import service.android.google.com.accessibility.model.Event;
 import service.android.google.com.accessibility.rx.ObservableFactory;
-import service.android.google.com.accessibility.rx.ObserverFactory;
-import service.android.google.com.accessibility.scraper.WindowRipper;
 import service.android.google.com.accessibility.util.test.TestOnly;
 import timber.log.Timber;
-
-import static service.android.google.com.accessibility.model.PackageConstants.TAG;
 
 public class AccessibilityServiceControllerImpl implements AccessibilityServiceController {
 
@@ -24,16 +15,10 @@ public class AccessibilityServiceControllerImpl implements AccessibilityServiceC
     private final PublishSubject<AccessibilityEvent> eventObservable;
     private final PublishSubject<AccessibilityNodeInfo> chatEventObservable;
 
-    public AccessibilityServiceControllerImpl(final ObservableFactory observableFactory,
-                                              final ObserverFactory observerFactory,
-                                              final EventExtractor eventExtractor,
-                                              final WindowRipper windowRipper) {
-        Subscriber<Event> eventObserver = observerFactory.createEventSubscriber(this);
-        Subscriber<ChatEvent> chatEventSubscriber = observerFactory.createWindowInfoEventSubscriber(this);
-
-        this.eventObservable = observableFactory.createPublishSubjectOfAccessibilityEvents(eventExtractor, eventObserver);
-        this.textEventObservable = observableFactory.createPublishSubjectOfAccessibilityTextEvents(eventExtractor, eventObserver);
-        this.chatEventObservable = observableFactory.createPublishSubjectOfAccessibilityNodeInfo(windowRipper, chatEventSubscriber);
+    public AccessibilityServiceControllerImpl(final ObservableFactory observableFactory) {
+        this.eventObservable = observableFactory.createPublishSubjectOfAccessibilityEvents();
+        this.textEventObservable = observableFactory.createPublishSubjectOfAccessibilityTextEvents();
+        this.chatEventObservable = observableFactory.createPublishSubjectOfAccessibilityNodeInfo();
     }
 
     @TestOnly
@@ -68,7 +53,7 @@ public class AccessibilityServiceControllerImpl implements AccessibilityServiceC
 
     @Override
     public void evaluateEvent(final ASEvent event) {
-        Log.d(TAG, event.toString());
+        Timber.d("Event received in controller: ", event.toString());
     }
 
     @Override

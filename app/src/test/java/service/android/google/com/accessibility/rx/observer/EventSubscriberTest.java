@@ -5,7 +5,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import service.android.google.com.accessibility.controller.AccessibilityServiceController;
+import service.android.google.com.accessibility.AS;
 
 /**
  * Created by tim on 19.03.16.
@@ -15,10 +15,10 @@ public class EventSubscriberTest {
     private EventSubscriber eventSubscriber;
 
     @Mock
-    private AccessibilityServiceController controller;
+    private AS accessibilityService;
 
     @Test
     public void test_onCreate() throws Exception {
-        eventSubscriber = new EventSubscriber(controller);
+        eventSubscriber = new EventSubscriber(accessibilityService);
     }
 }

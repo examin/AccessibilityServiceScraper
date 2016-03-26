@@ -8,12 +8,13 @@ import service.android.google.com.accessibility.application.AccessibilityApplica
 import service.android.google.com.accessibility.controller.AccessibilityServiceController;
 import service.android.google.com.accessibility.dagger.component.DaggerAccessibilityComponent;
 import service.android.google.com.accessibility.dagger.module.AccessibilityModule;
+import service.android.google.com.accessibility.model.ASEvent;
 import timber.log.Timber;
 
 public class AccessibilityService extends android.accessibilityservice.AccessibilityService implements AS {
 
     @Inject
-    AccessibilityServiceController accessibilityServiceController;
+    AccessibilityServiceController controller;
 
     @Override
     protected void onServiceConnected() {
@@ -34,11 +35,21 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         Timber.d("AccessibilityEvent was received: " + event.toString());
-        accessibilityServiceController.evaluateEvent(getRootInActiveWindow(), event);
+        controller.evaluateEvent(getRootInActiveWindow(), event);
     }
 
     @Override
     public void onInterrupt() {
         Timber.e("Service was interrupted! ");
+    }
+
+    @Override
+    public void evaluateEvent(ASEvent event) {
+        controller.evaluateEvent(event);
+    }
+
+    @Override
+    public void handleError(Throwable e) {
+        controller.handleError(e);
     }
 }

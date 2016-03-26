@@ -36,7 +36,7 @@ public class AccessibilityServiceTest {
     @Before
     public void setUp() throws Exception {
         accessibilityService = spy(new AccessibilityService());
-        accessibilityService.accessibilityServiceController = accessibilityServiceController;
+        accessibilityService.controller = accessibilityServiceController;
     }
 
     @Test
