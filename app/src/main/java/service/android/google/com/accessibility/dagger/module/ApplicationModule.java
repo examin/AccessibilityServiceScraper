@@ -1,12 +1,16 @@
 package service.android.google.com.accessibility.dagger.module;
 
 import android.app.Application;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 
 import dagger.Module;
 import dagger.Provides;
+import nl.nl2312.rxcupboard.RxCupboard;
+import nl.nl2312.rxcupboard.RxDatabase;
+import service.android.google.com.accessibility.storage.CupboardDbHelper;
 import service.android.google.com.accessibility.util.crashlytics.CrashlyticsTree;
 
 @Module
@@ -35,5 +39,11 @@ public class ApplicationModule {
                 .build();
 
         return new Crashlytics.Builder().core(core).build();
+    }
+
+    @Provides
+    RxDatabase rxDatabase(final Application applicationContext) {
+        final SQLiteDatabase db = CupboardDbHelper.getConnection(applicationContext);
+        return RxCupboard.withDefault(db);
     }
 }

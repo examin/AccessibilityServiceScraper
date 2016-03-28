@@ -5,11 +5,11 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import rx.functions.Func1;
 import service.android.google.com.accessibility.scraper.WindowRipper;
 
-public class FilterWindowInfoEventFunction implements Func1<AccessibilityNodeInfo, Boolean> {
+public class FilterWindowInfoEventWithoutScraperFunction implements Func1<AccessibilityNodeInfo, Boolean> {
 
     private final WindowRipper windowRipper;
 
-    public FilterWindowInfoEventFunction(final WindowRipper windowRipper) {
+    public FilterWindowInfoEventWithoutScraperFunction(final WindowRipper windowRipper) {
         this.windowRipper = windowRipper;
     }
 

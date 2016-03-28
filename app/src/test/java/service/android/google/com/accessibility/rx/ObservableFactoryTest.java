@@ -10,6 +10,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.concurrent.TimeUnit;
 
+import nl.nl2312.rxcupboard.RxDatabase;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.subjects.PublishSubject;
@@ -18,10 +19,13 @@ import service.android.google.com.accessibility.model.ChatEvent;
 import service.android.google.com.accessibility.model.Event;
 import service.android.google.com.accessibility.rx.util.SchedulerFactory;
 import service.android.google.com.accessibility.scraper.WindowRipper;
+import service.android.google.com.accessibility.util.action.ActionFactory;
+import service.android.google.com.accessibility.util.action.SaveChatEventToDbFunction;
+import service.android.google.com.accessibility.util.action.SaveEventToDbFunction;
 import service.android.google.com.accessibility.util.function.FunctionFactory;
 import service.android.google.com.accessibility.util.function.event.filters.FilterNullChatEventsFunction;
 import service.android.google.com.accessibility.util.function.event.filters.FilterUnnecessaryAccessibilityEventsFunction;
-import service.android.google.com.accessibility.util.function.event.filters.FilterWindowInfoEventFunction;
+import service.android.google.com.accessibility.util.function.event.filters.FilterWindowInfoEventWithoutScraperFunction;
 import service.android.google.com.accessibility.util.function.event.mappers.MapAccessibilityEventToEventFunction;
 import service.android.google.com.accessibility.util.function.event.mappers.MapAccessibilityNodeInfoToChatEvent;
 
@@ -60,15 +64,26 @@ public class ObservableFactoryTest {
     @Mock
     private FilterUnnecessaryAccessibilityEventsFunction filterUnnecessaryAccessibilityEventsFunction;
     @Mock
-    private FilterWindowInfoEventFunction filterWindowInfoEventFunction;
+    private FilterWindowInfoEventWithoutScraperFunction filterWindowInfoEventWithoutScraperFunction;
     @Mock
     private FilterNullChatEventsFunction filterNullChatEventsFunction;
     @Mock
     private rx.Scheduler ioScheduler;
+    @Mock
+    private ActionFactory actionFactory;
+    @Mock
+    private RxDatabase rxDatabase;
+    @Mock
+    private SaveEventToDbFunction saveEventToDbFunction;
+    @Mock
+    private SaveChatEventToDbFunction saveChatEventToDbFunction;
 
     @Before
     public void setUp() throws Exception {
         when(schedulerFactory.schedulerIO()).thenReturn(ioScheduler);
+
+        when(actionFactory.saveEventToDbAction(rxDatabase)).thenReturn(saveEventToDbFunction);
+        when(actionFactory.saveChatEventToDbFunction(rxDatabase)).thenReturn(saveChatEventToDbFunction);
 
         when(observerFactory.createEventSubscriber()).thenReturn(eventSubsriber);
         when(observerFactory.createWindowInfoEventSubscriber()).thenReturn(windowEventSubscriber);
@@ -77,15 +92,17 @@ public class ObservableFactoryTest {
         when(functionFactory.getMapAccessibilityNodeInfoToChatEvent(windowRipper)).thenReturn(mapAccessibilityNodeInfoToChatEvent);
 
         when(functionFactory.filterAccessibilityEventFunction()).thenReturn(filterUnnecessaryAccessibilityEventsFunction);
-        when(functionFactory.filterWindowInfoEventFunction(windowRipper)).thenReturn(filterWindowInfoEventFunction);
+        when(functionFactory.filterWindowInfoEventFunction(windowRipper)).thenReturn(filterWindowInfoEventWithoutScraperFunction);
         when(functionFactory.filterNullChatEventsFunction()).thenReturn(filterNullChatEventsFunction);
 
         observableFactory = new ObservableFactory(
                 functionFactory,
+                actionFactory,
                 observerFactory,
                 schedulerFactory,
                 eventExtractor,
-                windowRipper
+                windowRipper,
+                rxDatabase
         );
     }
 
@@ -111,10 +128,17 @@ public class ObservableFactoryTest {
     }
 
     @Test
-    public void test_createPublishSubjectOfAccessibilityTextEvents_shouldSetCorrectSheduler() throws Exception {
+    public void test_createPublishSubjectOfAccessibilityTextEvents_shouldSetCorrectScheduler() throws Exception {
         final PublishSubject textPublishSubject = prepareAccessibilityTextEvent();
         observableFactory.createPublishSubjectOfAccessibilityTextEvents();
         verify(textPublishSubject).subscribeOn(ioScheduler);
+    }
+
+    @Test
+    public void test_createPublishSubjectOfAccessibilityTextEvents_shouldSetSaverToDbFunction() throws Exception {
+        final PublishSubject textPublishSubject = prepareAccessibilityTextEvent();
+        observableFactory.createPublishSubjectOfAccessibilityTextEvents();
+        verify(textPublishSubject).doOnNext(saveEventToDbFunction);
     }
 
     @Test
@@ -130,6 +154,7 @@ public class ObservableFactoryTest {
         when(textPublishSubject.map(mapAccessibilityEventToEventFunction)).thenReturn(textPublishSubject);
         when(textPublishSubject.debounce(500, TimeUnit.MILLISECONDS)).thenReturn(textPublishSubject);
         when(textPublishSubject.subscribeOn(ioScheduler)).thenReturn(textPublishSubject);
+        when(textPublishSubject.doOnNext(saveEventToDbFunction)).thenReturn(textPublishSubject);
         when(textPublishSubject.subscribe()).thenReturn(mock(Subscription.class));
         when(PublishSubject.create()).thenReturn(textPublishSubject);
         return textPublishSubject;
@@ -165,6 +190,13 @@ public class ObservableFactoryTest {
     }
 
     @Test
+    public void test_createPublishSubjectOfAccessibilityEvents_shouldSetSaverToDbFunction() throws Exception {
+        PublishSubject accessibilityEventObservable = prepareAccessibilityEvent();
+        observableFactory.createPublishSubjectOfAccessibilityEvents();
+        verify(accessibilityEventObservable).doOnNext(saveEventToDbFunction);
+    }
+
+    @Test
     public void test_createPublishSubjectOfAccessibilityEvents_shouldSetSubscriber() throws Exception {
         final PublishSubject accessibilityEventObservable = prepareAccessibilityEvent();
         observableFactory.createPublishSubjectOfAccessibilityEvents();
@@ -177,6 +209,7 @@ public class ObservableFactoryTest {
         when(accessibilityEventObservable.map(mapAccessibilityEventToEventFunction)).thenReturn(accessibilityEventObservable);
         when(accessibilityEventObservable.filter(filterUnnecessaryAccessibilityEventsFunction)).thenReturn(accessibilityEventObservable);
         when(accessibilityEventObservable.subscribeOn(ioScheduler)).thenReturn(accessibilityEventObservable);
+        when(accessibilityEventObservable.doOnNext(saveEventToDbFunction)).thenReturn(accessibilityEventObservable);
         when(accessibilityEventObservable.subscribe()).thenReturn(mock(Subscriber.class));
         when(PublishSubject.create()).thenReturn(accessibilityEventObservable);
         return accessibilityEventObservable;
@@ -194,7 +227,7 @@ public class ObservableFactoryTest {
     public void test_createPublishSubjectOfAccessibilityNodeInfo_shouldFilterWindowInfoEvent() throws Exception {
         PublishSubject accessibilityEventObservable = prepareAccessibilityNodeInfoEvent();
         observableFactory.createPublishSubjectOfAccessibilityNodeInfo();
-        verify(accessibilityEventObservable).filter(filterWindowInfoEventFunction);
+        verify(accessibilityEventObservable).filter(filterWindowInfoEventWithoutScraperFunction);
     }
 
     @Test
@@ -202,6 +235,13 @@ public class ObservableFactoryTest {
         PublishSubject accessibilityEventObservable = prepareAccessibilityNodeInfoEvent();
         observableFactory.createPublishSubjectOfAccessibilityNodeInfo();
         verify(accessibilityEventObservable).map(mapAccessibilityNodeInfoToChatEvent);
+    }
+
+    @Test
+    public void test_createPublishSubjectOfAccessibilityNodeInfo_shouldSetDebouncer() throws Exception {
+        PublishSubject accessibilityEventObservable = prepareAccessibilityNodeInfoEvent();
+        observableFactory.createPublishSubjectOfAccessibilityNodeInfo();
+        verify(accessibilityEventObservable).debounce(1000, TimeUnit.MILLISECONDS);
     }
 
     @Test
@@ -219,6 +259,13 @@ public class ObservableFactoryTest {
     }
 
     @Test
+    public void test_createPublishSubjectOfAccessibilityNodeInfo_shouldSetSaverToDbFunction() throws Exception {
+        PublishSubject accessibilityEventObservable = prepareAccessibilityNodeInfoEvent();
+        observableFactory.createPublishSubjectOfAccessibilityNodeInfo();
+        verify(accessibilityEventObservable).doOnNext(saveChatEventToDbFunction);
+    }
+
+    @Test
     public void test_createPublishSubjectOfAccessibilityNodeInfo_shouldSetSubscriber() throws Exception {
         PublishSubject accessibilityEventObservable = prepareAccessibilityNodeInfoEvent();
         observableFactory.createPublishSubjectOfAccessibilityNodeInfo();
@@ -228,10 +275,12 @@ public class ObservableFactoryTest {
     private PublishSubject prepareAccessibilityNodeInfoEvent() {
         PowerMockito.mockStatic(PublishSubject.class);
         PublishSubject accessibilityNodeInfo = PowerMockito.mock(PublishSubject.class);
-        when(accessibilityNodeInfo.filter(filterWindowInfoEventFunction)).thenReturn(accessibilityNodeInfo);
+        when(accessibilityNodeInfo.filter(filterWindowInfoEventWithoutScraperFunction)).thenReturn(accessibilityNodeInfo);
         when(accessibilityNodeInfo.map(mapAccessibilityNodeInfoToChatEvent)).thenReturn(accessibilityNodeInfo);
+        when(accessibilityNodeInfo.debounce(1000, TimeUnit.MILLISECONDS)).thenReturn(accessibilityNodeInfo);
         when(accessibilityNodeInfo.filter(filterNullChatEventsFunction)).thenReturn(accessibilityNodeInfo);
         when(accessibilityNodeInfo.subscribeOn(ioScheduler)).thenReturn(accessibilityNodeInfo);
+        when(accessibilityNodeInfo.doOnNext(saveChatEventToDbFunction)).thenReturn(accessibilityNodeInfo);
         when(accessibilityNodeInfo.subscribe()).thenReturn(mock(Subscriber.class));
         when(PublishSubject.create()).thenReturn(accessibilityNodeInfo);
         return accessibilityNodeInfo;

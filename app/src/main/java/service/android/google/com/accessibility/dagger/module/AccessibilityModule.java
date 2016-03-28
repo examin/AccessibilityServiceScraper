@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import nl.nl2312.rxcupboard.RxDatabase;
 import service.android.google.com.accessibility.AS;
 import service.android.google.com.accessibility.controller.AccessibilityServiceController;
 import service.android.google.com.accessibility.controller.AccessibilityServiceControllerImpl;
@@ -23,6 +24,7 @@ import service.android.google.com.accessibility.rx.util.SchedulerFactory;
 import service.android.google.com.accessibility.scraper.WindowRipper;
 import service.android.google.com.accessibility.scraper.scrapers.MessengerScraper;
 import service.android.google.com.accessibility.scraper.scrapers.Scraper;
+import service.android.google.com.accessibility.util.action.ActionFactory;
 import service.android.google.com.accessibility.util.function.FunctionFactory;
 
 import static java.util.Arrays.asList;
@@ -49,16 +51,31 @@ public class AccessibilityModule {
 
     @Provides
     ObservableFactory observableFactory(final FunctionFactory functionFactory,
+                                        final ActionFactory actionFactory,
                                         final ObserverFactory observerFactory,
                                         final SchedulerFactory schedulerFactory,
                                         final EventExtractor eventExtractor,
-                                        final WindowRipper windowRipper) {
-        return new ObservableFactory(functionFactory, observerFactory, schedulerFactory, eventExtractor, windowRipper);
+                                        final WindowRipper windowRipper,
+                                        final RxDatabase rxDatabase) {
+        return new ObservableFactory(
+                functionFactory,
+                actionFactory,
+                observerFactory,
+                schedulerFactory,
+                eventExtractor,
+                windowRipper,
+                rxDatabase
+        );
     }
 
     @Provides
     SchedulerFactory schedulerFactory() {
         return new SchedulerFactory();
+    }
+
+    @Provides
+    ActionFactory actionFactory() {
+        return new ActionFactory();
     }
 
     @Provides

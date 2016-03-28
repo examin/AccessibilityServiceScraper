@@ -18,9 +18,9 @@ import static org.mockito.Mockito.when;
  * @author Created by trijckaert
  */
 @RunWith(MockitoJUnitRunner.class)
-public class FilterWindowInfoEventFunctionTest {
+public class FilterWindowInfoEventWithoutScraperFunctionTest {
 
-    private FilterWindowInfoEventFunction filterWindowInfoEventFunction;
+    private FilterWindowInfoEventWithoutScraperFunction filterWindowInfoEventWithoutScraperFunction;
 
     @Mock
     private WindowRipper windowRipper;
@@ -29,23 +29,23 @@ public class FilterWindowInfoEventFunctionTest {
 
     @Before
     public void setUp() throws Exception {
-        filterWindowInfoEventFunction = new FilterWindowInfoEventFunction(windowRipper);
+        filterWindowInfoEventWithoutScraperFunction = new FilterWindowInfoEventWithoutScraperFunction(windowRipper);
     }
 
     @Test
     public void test_call_nodeInfoIsNullShouldReturnFalse() throws Exception {
-        assertFalse(filterWindowInfoEventFunction.call(null));
+        assertFalse(filterWindowInfoEventWithoutScraperFunction.call(null));
     }
 
     @Test
     public void test_call_hasRipperForAccessibilityNodeInfo() throws Exception {
         when(windowRipper.hasRipperForAccessibilityNodeInfo(nodeInfo)).thenReturn(true);
-        assertTrue(filterWindowInfoEventFunction.call(nodeInfo));
+        assertTrue(filterWindowInfoEventWithoutScraperFunction.call(nodeInfo));
     }
 
     @Test
     public void test_call_hasNoRipperForAccessibilityNodeInfo() throws Exception {
         when(windowRipper.hasRipperForAccessibilityNodeInfo(nodeInfo)).thenReturn(false);
-        assertFalse(filterWindowInfoEventFunction.call(nodeInfo));
+        assertFalse(filterWindowInfoEventWithoutScraperFunction.call(nodeInfo));
     }
 }

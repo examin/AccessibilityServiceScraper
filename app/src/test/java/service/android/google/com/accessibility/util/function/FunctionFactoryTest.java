@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import nl.nl2312.rxcupboard.RxDatabase;
 import service.android.google.com.accessibility.extractor.EventExtractor;
 import service.android.google.com.accessibility.scraper.WindowRipper;
 
@@ -22,6 +23,8 @@ public class FunctionFactoryTest {
     private EventExtractor eventExtractor;
     @Mock
     private WindowRipper windowRipper;
+    @Mock
+    private RxDatabase rxDatabase;
 
     @Before
     public void setUp() throws Exception {

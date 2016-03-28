@@ -53,7 +53,7 @@ public class AccessibilityServiceControllerImpl implements AccessibilityServiceC
 
     @Override
     public void evaluateEvent(final ASEvent event) {
-        Timber.d("Event received in controller: ", event.toString());
+        Timber.d(event.toString());
     }
 
     @Override

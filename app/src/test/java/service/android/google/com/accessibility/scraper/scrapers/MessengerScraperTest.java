@@ -14,6 +14,7 @@ import service.android.google.com.accessibility.model.ChatEvent;
 import service.android.google.com.accessibility.model.PackageConstants;
 
 import static java.util.Arrays.asList;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -100,7 +101,7 @@ public class MessengerScraperTest {
 
         final ChatEvent windowInfoEventFromAccessibilityNodeInfo = messengerRipper.getChatEventFromAccessibilityNodeInfo(nodeInfo);
 
-        assertNull(windowInfoEventFromAccessibilityNodeInfo.messages().get(0).date());
+        assertNotNull(windowInfoEventFromAccessibilityNodeInfo.messages().get(0).date());
     }
 
     @Test

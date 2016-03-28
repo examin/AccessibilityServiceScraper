@@ -15,9 +15,6 @@ public abstract class Event implements Parcelable, ASEvent {
 
     public abstract int eventType();
 
-    @Nullable
-    public abstract AccessibilityNodeInfo source();
-
     public abstract String className();
 
     public abstract String packageName();
@@ -31,6 +28,9 @@ public abstract class Event implements Parcelable, ASEvent {
     public abstract boolean isPassword();
 
     public abstract boolean isChecked();
+
+    @Nullable
+    public abstract AccessibilityNodeInfo source();
 
     @Nullable
     public abstract int fromIndex();
@@ -75,6 +75,7 @@ public abstract class Event implements Parcelable, ASEvent {
 
     @AutoParcel.Builder
     public abstract static class Builder {
+
         public abstract Builder eventType(final int eventType);
 
         public abstract Builder source(final AccessibilityNodeInfo nodeInfo);

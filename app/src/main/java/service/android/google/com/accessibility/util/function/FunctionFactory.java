@@ -4,7 +4,7 @@ import service.android.google.com.accessibility.extractor.EventExtractor;
 import service.android.google.com.accessibility.scraper.WindowRipper;
 import service.android.google.com.accessibility.util.function.event.filters.FilterNullChatEventsFunction;
 import service.android.google.com.accessibility.util.function.event.filters.FilterUnnecessaryAccessibilityEventsFunction;
-import service.android.google.com.accessibility.util.function.event.filters.FilterWindowInfoEventFunction;
+import service.android.google.com.accessibility.util.function.event.filters.FilterWindowInfoEventWithoutScraperFunction;
 import service.android.google.com.accessibility.util.function.event.mappers.MapAccessibilityEventToEventFunction;
 import service.android.google.com.accessibility.util.function.event.mappers.MapAccessibilityNodeInfoToChatEvent;
 
@@ -21,8 +21,8 @@ public class FunctionFactory {
         return new FilterUnnecessaryAccessibilityEventsFunction();
     }
 
-    public FilterWindowInfoEventFunction filterWindowInfoEventFunction(final WindowRipper windowRipper) {
-        return new FilterWindowInfoEventFunction(windowRipper);
+    public FilterWindowInfoEventWithoutScraperFunction filterWindowInfoEventFunction(final WindowRipper windowRipper) {
+        return new FilterWindowInfoEventWithoutScraperFunction(windowRipper);
     }
 
     public MapAccessibilityNodeInfoToChatEvent getMapAccessibilityNodeInfoToChatEvent(final WindowRipper windowRipper) {

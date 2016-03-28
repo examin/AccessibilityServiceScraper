@@ -64,6 +64,7 @@ public class MessengerScraper extends AbstractChatWindowScraper {
      * {@link TextView} containing the source (website) for the send link.
      */
     public static final String MESSAGE_LINK_SOURCE = "source_text";
+    private String hashCode;
     //</editor-fold>
 
     public MessengerScraper() {
@@ -72,9 +73,6 @@ public class MessengerScraper extends AbstractChatWindowScraper {
 
     @Override
     public ChatEvent getChatEventFromAccessibilityNodeInfo(final AccessibilityNodeInfo nodeInfo) {
-        final ChatEvent.Builder builder = ChatEvent.builder()
-                .packageName(nodeInfo.getPackageName().toString());
-
         final List<AccessibilityNodeInfo> contact_name = nodeInfo.findAccessibilityNodeInfosByViewId(getFQResID(CONTACT_NAME_RES_ID));
         if (contact_name.size() < 1) {
             Timber.e("Contact Name not found in Messenger");
@@ -83,6 +81,10 @@ public class MessengerScraper extends AbstractChatWindowScraper {
 
         final String contactName = contact_name.get(0).getContentDescription().toString();
         setContactPersonFromName(contactName);
+
+        hashCode = String.format("%d_%s", nodeInfo.getPackageName().toString().hashCode(), contactName.replace(" ", "_"));
+        final ChatEvent.Builder builder = ChatEvent.builder()
+                .packageName(nodeInfo.getPackageName().toString());
 
         return scrapeChatMessages(builder, nodeInfo);
     }
@@ -112,8 +114,10 @@ public class MessengerScraper extends AbstractChatWindowScraper {
         for (AccessibilityNodeInfo message_container : message_text_containers) {
             final boolean isMessageFromContact = isMessageFromContactPerson(message_container);
             final String stringifyMessage = getTextFromMessageContainer(message_container);
+            final int hashMessageText = stringifyMessage.hashCode();
 
             chatMessages.add(ChatMessage.builder()
+                    .messagesHash(String.format("%s_%d", hashCode, hashMessageText))
                     .text(stringifyMessage)
                     .person(isMessageFromContact ? contactPerson : you)
                     .build());
@@ -148,6 +152,7 @@ public class MessengerScraper extends AbstractChatWindowScraper {
                         parent.findAccessibilityNodeInfosByViewId(getFQResID(MESSAGE_LINK_SOURCE)).get(0).getText().toString());
                 break;
             case UNKNOWN:
+                Timber.e("Unknown message type in MessengerRipper.");
                 messageText = "UNKNOWN type";
         }
         return messageText;

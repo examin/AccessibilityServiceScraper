@@ -6,12 +6,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import nl.nl2312.rxcupboard.RxDatabase;
 import service.android.google.com.accessibility.AS;
 import service.android.google.com.accessibility.extractor.EventExtractor;
 import service.android.google.com.accessibility.rx.ObservableFactory;
 import service.android.google.com.accessibility.rx.ObserverFactory;
 import service.android.google.com.accessibility.rx.util.SchedulerFactory;
 import service.android.google.com.accessibility.scraper.WindowRipper;
+import service.android.google.com.accessibility.util.action.ActionFactory;
 import service.android.google.com.accessibility.util.function.FunctionFactory;
 
 import static junit.framework.Assert.assertNotNull;
@@ -40,6 +42,10 @@ public class AccessibilityModuleTest {
     private FunctionFactory functionFactory;
     @Mock
     private SchedulerFactory schedulerFactory;
+    @Mock
+    private ActionFactory actionFactory;
+    @Mock
+    private RxDatabase rxDatabase;
 
     @Before
     public void setUp() throws Exception {
@@ -65,10 +71,12 @@ public class AccessibilityModuleTest {
         assertNotNull(
                 accessibilityModule.observableFactory(
                         functionFactory,
+                        actionFactory,
                         observerFactory,
                         schedulerFactory,
                         eventExtractor,
-                        windowRipper
+                        windowRipper,
+                        rxDatabase
                 )
         );
     }
@@ -106,5 +114,13 @@ public class AccessibilityModuleTest {
         assertNotNull(
                 accessibilityModule.schedulerFactory()
         );
+    }
+
+    @Test
+    public void test_actionFactory() throws Exception {
+        assertNotNull(
+                accessibilityModule.actionFactory()
+        );
+
     }
 }

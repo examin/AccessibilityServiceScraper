@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import service.android.google.com.accessibility.controller.AccessibilityServiceController;
+import service.android.google.com.accessibility.model.Event;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -46,5 +47,19 @@ public class AccessibilityServiceTest {
         accessibilityService.onAccessibilityEvent(accessibilityEvent);
         verify(accessibilityServiceController).evaluateEvent(eq(activeWindowNodeInfo), accessibilityEventArgumentCaptor.capture());
         assertThat(accessibilityEventArgumentCaptor.getValue(), is(accessibilityEvent));
+    }
+
+    @Test
+    public void test_evaluteEvent() throws Exception {
+        final Event event = ModelBuilder.createEvent();
+        accessibilityService.evaluateEvent(event);
+        verify(accessibilityServiceController).evaluateEvent(event);
+    }
+
+    @Test
+    public void test_handleError() throws Exception {
+        final Exception e = new Exception("Mockexception");
+        accessibilityService.handleError(e);
+        verify(accessibilityServiceController).handleError(e);
     }
 }

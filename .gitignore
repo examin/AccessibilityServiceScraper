@@ -1,3 +1,6 @@
+#Ignore debugging database
+/database.db
+
 /app/fabric.properties
 *.iml
 .gradle

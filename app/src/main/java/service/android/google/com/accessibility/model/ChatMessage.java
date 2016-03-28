@@ -12,22 +12,26 @@ public abstract class ChatMessage implements Parcelable {
         return new AutoParcel_ChatMessage.Builder();
     }
 
+    public abstract String messagesHash();
+
     public abstract Person person();
 
     public abstract String text();
 
     @Nullable
-    public abstract String date();
+    public abstract long date();
 
     public abstract Builder toBuilder();
 
     @AutoParcel.Builder
     public abstract static class Builder {
+        public abstract Builder messagesHash(final String messagesHash);
+
         public abstract Builder person(final Person person);
 
         public abstract Builder text(final String text);
 
-        public abstract Builder date(final String date);
+        public abstract Builder date(final long date);
 
         public abstract ChatMessage build();
     }
