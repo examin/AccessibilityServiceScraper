@@ -21,22 +21,21 @@ public class CupboardDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "database.db";
     private static final int DATABASE_VERSION = 1;
 
-    private static SQLiteDatabase database;
+    static {
+        cupboard().register(ChatMessageDTO.class);
+        cupboard().register(EventDTO.class);
+        Timber.d("Database objects were registered");
+    }
+
     private Cupboard cupboard;
 
     public CupboardDbHelper(final Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public synchronized static SQLiteDatabase getConnection(final Context context) {
-        if (database == null) {
-            database = new CupboardDbHelper(context.getApplicationContext()).getWritableDatabase();
-        }
-        return database;
-    }
-
     @Override
     public void onCreate(final SQLiteDatabase db) {
+        Timber.w("Creating CupboardDatabase");
         cupboard = new CupboardBuilder()
                 .useAnnotations()
                 .build();
@@ -53,6 +52,7 @@ public class CupboardDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
+        Timber.w("Upgrading CupboardDatabase");
         cupboard()
                 .withDatabase(db)
                 .upgradeTables();

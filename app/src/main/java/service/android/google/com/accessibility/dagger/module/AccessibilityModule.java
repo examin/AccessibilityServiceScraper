@@ -1,5 +1,9 @@
 package service.android.google.com.accessibility.dagger.module;
 
+import android.content.res.Resources;
+
+import com.github.pwittchen.prefser.library.Prefser;
+
 import java.util.Arrays;
 
 import javax.inject.Singleton;
@@ -8,6 +12,7 @@ import dagger.Module;
 import dagger.Provides;
 import nl.nl2312.rxcupboard.RxDatabase;
 import service.android.google.com.accessibility.AS;
+import service.android.google.com.accessibility.R;
 import service.android.google.com.accessibility.controller.AccessibilityServiceController;
 import service.android.google.com.accessibility.controller.AccessibilityServiceControllerImpl;
 import service.android.google.com.accessibility.extractor.EventExtractor;
@@ -45,8 +50,14 @@ public class AccessibilityModule {
 
     @Provides
     @Singleton
-    AccessibilityServiceController accessibilityServiceController(final ObservableFactory observableFactory) {
-        return new AccessibilityServiceControllerImpl(observableFactory);
+    AccessibilityServiceController accessibilityServiceController(final ObservableFactory observableFactory,
+                                                                  final Prefser prefser,
+                                                                  final Resources resources) {
+        return new AccessibilityServiceControllerImpl(
+                observableFactory,
+                prefser,
+                resources
+        );
     }
 
     @Provides
@@ -56,7 +67,9 @@ public class AccessibilityModule {
                                         final SchedulerFactory schedulerFactory,
                                         final EventExtractor eventExtractor,
                                         final WindowRipper windowRipper,
-                                        final RxDatabase rxDatabase) {
+                                        final RxDatabase rxDatabase,
+                                        final Resources resources,
+                                        final Prefser prefser) {
         return new ObservableFactory(
                 functionFactory,
                 actionFactory,
@@ -64,7 +77,9 @@ public class AccessibilityModule {
                 schedulerFactory,
                 eventExtractor,
                 windowRipper,
-                rxDatabase
+                rxDatabase,
+                resources,
+                prefser
         );
     }
 
@@ -84,12 +99,13 @@ public class AccessibilityModule {
     }
 
     @Provides
-    EventExtractor eventExtractor() {
+    EventExtractor eventExtractor(final Prefser prefser,
+                                  final Resources resources) {
         return new EventExtractor(Arrays.<Extractor>asList(
                 new ViewClickedExtractor(),
                 new ViewFocusedExtractor(asList(PackageConstants.APP_NEXUS_APP_LAUNCHER)),
                 new ViewTextChangedExtractor(),
-                new WindowStateChangedExtractor(asList(PackageConstants.APP_MESSENGER)),
+                new WindowStateChangedExtractor(resources.getString(R.string.pref_key_apps), prefser),
                 new NotificationStateChangedExtractor()
         ));
     }

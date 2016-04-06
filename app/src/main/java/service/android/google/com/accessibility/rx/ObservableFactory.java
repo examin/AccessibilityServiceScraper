@@ -1,16 +1,20 @@
 package service.android.google.com.accessibility.rx;
 
+import android.content.res.Resources;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+
+import com.github.pwittchen.prefser.library.Prefser;
 
 import java.util.concurrent.TimeUnit;
 
 import nl.nl2312.rxcupboard.RxDatabase;
-import rx.Subscriber;
+import rx.Subscription;
 import rx.subjects.PublishSubject;
 import service.android.google.com.accessibility.extractor.EventExtractor;
-import service.android.google.com.accessibility.model.ChatEvent;
-import service.android.google.com.accessibility.model.Event;
+import service.android.google.com.accessibility.rx.observer.ChatEventSubscriber;
+import service.android.google.com.accessibility.rx.observer.EventSubscriber;
+import service.android.google.com.accessibility.rx.observer.ToggleEventSubscriber;
 import service.android.google.com.accessibility.rx.util.SchedulerFactory;
 import service.android.google.com.accessibility.scraper.WindowRipper;
 import service.android.google.com.accessibility.util.action.ActionFactory;
@@ -25,9 +29,12 @@ import service.android.google.com.accessibility.util.function.event.mappers.MapA
 
 public class ObservableFactory {
 
-    private final Subscriber<Event> eventObserver;
-    private final Subscriber<ChatEvent> chatEventSubscriber;
+    private final EventSubscriber eventObserver;
+    private final ChatEventSubscriber chatEventSubscriber;
+    private final ToggleEventSubscriber toggleEventSubscriber;
+
     private final SchedulerFactory schedulerFactory;
+    private final Prefser prefser;
 
     private final MapAccessibilityEventToEventFunction mapAccessibilityEventToEventFunction;
     private final MapAccessibilityNodeInfoToChatEvent mapAccessibilityNodeInfoToChatEvent;
@@ -45,10 +52,14 @@ public class ObservableFactory {
                              final SchedulerFactory schedulerFactory,
                              final EventExtractor eventExtractor,
                              final WindowRipper windowRipper,
-                             final RxDatabase rxDatabase) {
+                             final RxDatabase rxDatabase,
+                             final Resources resources,
+                             final Prefser prefser) {
         this.schedulerFactory = schedulerFactory;
+        this.prefser = prefser;
         this.eventObserver = observerFactory.createEventSubscriber();
         this.chatEventSubscriber = observerFactory.createWindowInfoEventSubscriber();
+        this.toggleEventSubscriber = observerFactory.createToggleEventSubscriber(resources, prefser);
 
         this.mapAccessibilityEventToEventFunction = functionFactory.getMapAccessibilityEventToEventFunction(eventExtractor);
         this.mapAccessibilityNodeInfoToChatEvent = functionFactory.getMapAccessibilityNodeInfoToChatEvent(windowRipper);
@@ -98,5 +109,11 @@ public class ObservableFactory {
                 .subscribe(chatEventSubscriber);
 
         return windowInfoEventPublishSubject;
+    }
+
+    public Subscription subscribeObservePreferences() {
+        return prefser.observePreferences()
+                .subscribeOn(schedulerFactory.schedulerIO())
+                .subscribe(toggleEventSubscriber);
     }
 }

@@ -1,5 +1,9 @@
 package service.android.google.com.accessibility.rx;
 
+import android.content.res.Resources;
+
+import com.github.pwittchen.prefser.library.Prefser;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +24,10 @@ public class ObserverFactoryTest {
 
     @Mock
     private AS accessibilityService;
+    @Mock
+    private Resources resources;
+    @Mock
+    private Prefser prefser;
 
     @Before
     public void setUp() throws Exception {
@@ -34,5 +42,10 @@ public class ObserverFactoryTest {
     @Test
     public void test_createWindowInfoEventSubscriber() throws Exception {
         assertNotNull(observerFactory.createWindowInfoEventSubscriber());
+    }
+
+    @Test
+    public void test_createToggleEventSubscriber() throws Exception {
+        assertNotNull(observerFactory.createToggleEventSubscriber(resources, prefser));
     }
 }

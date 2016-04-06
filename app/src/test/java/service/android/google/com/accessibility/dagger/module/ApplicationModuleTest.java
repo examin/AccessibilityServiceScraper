@@ -1,6 +1,7 @@
 package service.android.google.com.accessibility.dagger.module;
 
 import android.app.Application;
+import android.content.res.Resources;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Created by trijckaert
@@ -22,9 +24,12 @@ public class ApplicationModuleTest {
 
     @Mock
     private Application application;
+    @Mock
+    private Resources resources;
 
     @Before
     public void setUp() throws Exception {
+        when(application.getResources()).thenReturn(resources);
         applicationModule = new ApplicationModule(application);
     }
 
@@ -41,5 +46,10 @@ public class ApplicationModuleTest {
     @Test
     public void test_provideCrashlytics() throws Exception {
         assertNotNull(applicationModule.provideCrashlytics());
+    }
+
+    @Test
+    public void test_resources() throws Exception {
+        assertThat(applicationModule.resources(), is(resources));
     }
 }

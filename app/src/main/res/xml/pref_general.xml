@@ -1,0 +1,52 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:capitalize="words"
+        android:defaultValue="@string/pref_default_display_name"
+        android:inputType="textCapWords"
+        android:key="@string/pref_key_display_name"
+        android:maxLines="2"
+        android:selectAllOnFocus="true"
+        android:summary="@string/pref_display_name_summary"
+        android:title="@string/pref_title_display_name" />
+
+    <PreferenceCategory android:title="@string/pref_events_title">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_event_general"
+            android:summary="@string/pref_event_general_summary"
+            android:title="@string/pref_title_event_general" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_event_text"
+            android:summary="@string/pref_event_text_summary"
+            android:title="@string/pref_title_event_text" />
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="@string/pref_events_experimental_title">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_chat_event"
+            android:summary="@string/pref_chat_event_summary"
+            android:title="@string/pref_title_chat_event" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:dependency="@string/pref_key_chat_event"
+        android:shouldDisableView="@string/pref_key_chat_event"
+        android:title="@string/pref_events_experimental_apps_title">
+
+        <MultiSelectListPreference
+            android:defaultValue="@array/empty_array"
+            android:entries="@array/pref_events_apps_titles"
+            android:entryValues="@array/pref_events_apps_values"
+            android:key="@string/pref_key_apps"
+            android:persistent="true"
+            android:summary="@string/pref_events_app_summary"
+            android:title="@string/pref_events_apps_title" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

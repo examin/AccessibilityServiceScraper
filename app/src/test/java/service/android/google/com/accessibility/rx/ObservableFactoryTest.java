@@ -1,5 +1,9 @@
 package service.android.google.com.accessibility.rx;
 
+import android.content.res.Resources;
+
+import com.github.pwittchen.prefser.library.Prefser;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,8 +19,9 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.subjects.PublishSubject;
 import service.android.google.com.accessibility.extractor.EventExtractor;
-import service.android.google.com.accessibility.model.ChatEvent;
-import service.android.google.com.accessibility.model.Event;
+import service.android.google.com.accessibility.rx.observer.ChatEventSubscriber;
+import service.android.google.com.accessibility.rx.observer.EventSubscriber;
+import service.android.google.com.accessibility.rx.observer.ToggleEventSubscriber;
 import service.android.google.com.accessibility.rx.util.SchedulerFactory;
 import service.android.google.com.accessibility.scraper.WindowRipper;
 import service.android.google.com.accessibility.util.action.ActionFactory;
@@ -54,9 +59,9 @@ public class ObservableFactoryTest {
     @Mock
     private WindowRipper windowRipper;
     @Mock
-    private rx.Subscriber<Event> eventSubsriber;
+    private EventSubscriber eventSubsriber;
     @Mock
-    private rx.Subscriber<ChatEvent> windowEventSubscriber;
+    private ChatEventSubscriber windowEventSubscriber;
     @Mock
     private MapAccessibilityEventToEventFunction mapAccessibilityEventToEventFunction;
     @Mock
@@ -77,6 +82,16 @@ public class ObservableFactoryTest {
     private SaveEventToDbFunction saveEventToDbFunction;
     @Mock
     private SaveChatEventToDbFunction saveChatEventToDbFunction;
+    @Mock
+    private Resources resources;
+    @Mock
+    private Prefser prefser;
+    @Mock
+    private rx.Observable<java.lang.String> preferencesObservable;
+    @Mock
+    private ToggleEventSubscriber toggleEventSubscriber;
+    @Mock
+    private rx.Subscription toggleEventSubscription;
 
     @Before
     public void setUp() throws Exception {
@@ -87,6 +102,7 @@ public class ObservableFactoryTest {
 
         when(observerFactory.createEventSubscriber()).thenReturn(eventSubsriber);
         when(observerFactory.createWindowInfoEventSubscriber()).thenReturn(windowEventSubscriber);
+        when(observerFactory.createToggleEventSubscriber(resources, prefser)).thenReturn(toggleEventSubscriber);
 
         when(functionFactory.getMapAccessibilityEventToEventFunction(eventExtractor)).thenReturn(mapAccessibilityEventToEventFunction);
         when(functionFactory.getMapAccessibilityNodeInfoToChatEvent(windowRipper)).thenReturn(mapAccessibilityNodeInfoToChatEvent);
@@ -95,6 +111,8 @@ public class ObservableFactoryTest {
         when(functionFactory.filterWindowInfoEventFunction(windowRipper)).thenReturn(filterWindowInfoEventWithoutScraperFunction);
         when(functionFactory.filterNullChatEventsFunction()).thenReturn(filterNullChatEventsFunction);
 
+        when(prefser.observePreferences()).thenReturn(preferencesObservable);
+
         observableFactory = new ObservableFactory(
                 functionFactory,
                 actionFactory,
@@ -102,7 +120,9 @@ public class ObservableFactoryTest {
                 schedulerFactory,
                 eventExtractor,
                 windowRipper,
-                rxDatabase
+                rxDatabase,
+                resources,
+                prefser
         );
     }
 
@@ -284,6 +304,33 @@ public class ObservableFactoryTest {
         when(accessibilityNodeInfo.subscribe()).thenReturn(mock(Subscriber.class));
         when(PublishSubject.create()).thenReturn(accessibilityNodeInfo);
         return accessibilityNodeInfo;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Toggle Event Observer">
+    @Test
+    public void test_subscribeObservePreferences() throws Exception {
+        prepareToggleEventObservable();
+        assertThat(observableFactory.subscribeObservePreferences(), is(toggleEventSubscription));
+    }
+
+    @Test
+    public void test_subscribeObservePreference_shouldSetCorrectScheduler() throws Exception {
+        prepareToggleEventObservable();
+        observableFactory.subscribeObservePreferences();
+        verify(preferencesObservable).subscribeOn(ioScheduler);
+    }
+
+    @Test
+    public void test_subscribeObservePreference_shouldSubscribe() throws Exception {
+        prepareToggleEventObservable();
+        observableFactory.subscribeObservePreferences();
+        verify(preferencesObservable).subscribe(toggleEventSubscriber);
+    }
+
+    private void prepareToggleEventObservable() {
+        when(preferencesObservable.subscribeOn(ioScheduler)).thenReturn(preferencesObservable);
+        when(preferencesObservable.subscribe(toggleEventSubscriber)).thenReturn(toggleEventSubscription);
     }
     //</editor-fold>
 }

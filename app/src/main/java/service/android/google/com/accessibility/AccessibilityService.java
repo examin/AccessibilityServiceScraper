@@ -32,23 +32,48 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
         Timber.d("Dagger injected!");
     }
 
-    @Override
-    public void onAccessibilityEvent(AccessibilityEvent event) {
-        controller.evaluateEvent(getRootInActiveWindow(), event);
-    }
-
-    @Override
-    public void onInterrupt() {
-        Timber.e("Service was interrupted! ");
-    }
-
+    //<editor-fold desc="Accessibility Service">
     @Override
     public void evaluateEvent(ASEvent event) {
         controller.evaluateEvent(event);
     }
 
     @Override
+    public void onAccessibilityEvent(AccessibilityEvent event) {
+        controller.evaluateEvent(getRootInActiveWindow(), event);
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Preferences Change Aware">
+    @Override
+    public void eventTrackingChanged(boolean isEnabled) {
+        controller.toggleEventTracking(isEnabled);
+    }
+
+    @Override
+    public void textEventTrackingChanged(boolean isEnabled) {
+        controller.toggleTextEventTracking(isEnabled);
+    }
+
+    @Override
+    public void chatEventTrackingChanged(boolean isEnabled) {
+        controller.toggleChatEventTracking(isEnabled);
+    }
+    //</editor-fold>
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        controller.unSubscribe();
+    }
+
+    @Override
     public void handleError(Throwable e) {
         controller.handleError(e);
+    }
+
+    @Override
+    public void onInterrupt() {
+        Timber.e("Service was interrupted! ");
     }
 }

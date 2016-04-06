@@ -50,7 +50,7 @@ public class AccessibilityServiceTest {
     }
 
     @Test
-    public void test_evaluteEvent() throws Exception {
+    public void test_evaluateEvent() throws Exception {
         final Event event = ModelBuilder.createEvent();
         accessibilityService.evaluateEvent(event);
         verify(accessibilityServiceController).evaluateEvent(event);
@@ -58,8 +58,32 @@ public class AccessibilityServiceTest {
 
     @Test
     public void test_handleError() throws Exception {
-        final Exception e = new Exception("Mockexception");
+        final Exception e = new Exception("MockException");
         accessibilityService.handleError(e);
         verify(accessibilityServiceController).handleError(e);
+    }
+
+    @Test
+    public void test_eventTrackingChanged() throws Exception {
+        accessibilityService.eventTrackingChanged(true);
+        verify(accessibilityServiceController).toggleEventTracking(true);
+    }
+
+    @Test
+    public void test_textEventTrackingChanged() throws Exception {
+        accessibilityService.textEventTrackingChanged(true);
+        verify(accessibilityServiceController).toggleTextEventTracking(true);
+    }
+
+    @Test
+    public void test_chatEventTrackingChanged() throws Exception {
+        accessibilityService.chatEventTrackingChanged(true);
+        verify(accessibilityServiceController).toggleChatEventTracking(true);
+    }
+
+    @Test
+    public void test_onDestroy() throws Exception {
+        accessibilityService.onDestroy();
+        verify(accessibilityServiceController).unSubscribe();
     }
 }

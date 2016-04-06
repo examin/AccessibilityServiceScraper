@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="service.android.google.com.accessibility">
 
@@ -11,16 +12,15 @@
     <application
         android:name=".application.AccessibilityApplication"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_scheme"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <service
             android:name=".AccessibilityService"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
@@ -29,8 +29,14 @@
                 android:name="android.accessibilityservice"
                 android:resource="@xml/accessibillity_service_config" />
         </service>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="75a39c8c5fb9312a990d4ab7b83dfd911e67e0c1" />
+
+        <activity
+            android:name=".ui.activity.SettingsActivity"
+            android:label="@string/title_activity_settings" />
     </application>
+
 </manifest>

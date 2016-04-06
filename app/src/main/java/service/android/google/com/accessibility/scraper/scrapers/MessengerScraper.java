@@ -82,7 +82,6 @@ public class MessengerScraper extends AbstractChatWindowScraper {
         final String contactName = contact_name.get(0).getContentDescription().toString();
         setContactPersonFromName(contactName);
 
-        hashCode = String.format("%d_%s", nodeInfo.getPackageName().toString().hashCode(), contactName.replace(" ", "_"));
         final ChatEvent.Builder builder = ChatEvent.builder()
                 .packageName(nodeInfo.getPackageName().toString());
 
@@ -114,10 +113,10 @@ public class MessengerScraper extends AbstractChatWindowScraper {
         for (AccessibilityNodeInfo message_container : message_text_containers) {
             final boolean isMessageFromContact = isMessageFromContactPerson(message_container);
             final String stringifyMessage = getTextFromMessageContainer(message_container);
-            final int hashMessageText = stringifyMessage.hashCode();
+            final String messagesHash = this.buildMessageHash(stringifyMessage);
 
             chatMessages.add(ChatMessage.builder()
-                    .messagesHash(String.format("%s_%d", hashCode, hashMessageText))
+                    .messagesHash(messagesHash)
                     .text(stringifyMessage)
                     .person(isMessageFromContact ? contactPerson : you)
                     .build());

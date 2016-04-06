@@ -1,7 +1,10 @@
 package service.android.google.com.accessibility.controller;
 
+import android.content.res.Resources;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+
+import com.github.pwittchen.prefser.library.Prefser;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +14,9 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import rx.subjects.PublishSubject;
+import rx.subscriptions.CompositeSubscription;
+import service.android.google.com.accessibility.R;
+import service.android.google.com.accessibility.rx.ObservableFactory;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -20,7 +26,7 @@ import static org.mockito.Mockito.when;
  * Created by tim on 19.03.16.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(PublishSubject.class)
+@PrepareForTest({PublishSubject.class, CompositeSubscription.class})
 public class AccessibilityServiceControllerImplTest {
 
     private AccessibilityServiceControllerImpl accessibilityServiceController;
@@ -31,18 +37,39 @@ public class AccessibilityServiceControllerImplTest {
     private PublishSubject<AccessibilityEvent> textEventObservable;
     @Mock
     private PublishSubject<AccessibilityNodeInfo> chatEventObservable;
+    @Mock
+    private Prefser prefser;
+    @Mock
+    private Resources resources;
+    @Mock
+    private CompositeSubscription compositeSubscription;
 
     @Mock
     private AccessibilityNodeInfo accessibilityNodeInfo;
     @Mock
     private AccessibilityEvent accessibilityEvent;
+    @Mock
+    private ObservableFactory observableFactory;
+    @Mock
+    private rx.Subscription preferenceSubscription;
 
     @Before
     public void setUp() throws Exception {
+        when(prefser.get("EVENT_GENERAL", Boolean.class, false)).thenReturn(true);
+        when(prefser.get("CHAT_EVENT", Boolean.class, false)).thenReturn(true);
+        when(prefser.get("TEXT_EVENT", Boolean.class, false)).thenReturn(true);
+
+        when(resources.getString(R.string.pref_key_event_general)).thenReturn("EVENT_GENERAL");
+        when(resources.getString(R.string.pref_key_chat_event)).thenReturn("CHAT_EVENT");
+        when(resources.getString(R.string.pref_key_event_text)).thenReturn("TEXT_EVENT");
+
         accessibilityServiceController = new AccessibilityServiceControllerImpl(
                 textEventObservable,
                 eventObservable,
-                chatEventObservable
+                chatEventObservable,
+                prefser,
+                resources,
+                compositeSubscription
         );
     }
 
@@ -104,6 +131,12 @@ public class AccessibilityServiceControllerImplTest {
         verify(chatEventObservable).onNext(accessibilityNodeInfo);
         verify(eventObservable).onNext(accessibilityEvent);
         verifyZeroInteractions(textEventObservable);
+    }
+
+    @Test
+    public void test_unSubscribe() throws Exception {
+        accessibilityServiceController.unSubscribe();
+        verify(compositeSubscription).unsubscribe();
     }
 
     private void prepareAccessibilityEventForTest(int typeGestureDetectionEnd) {

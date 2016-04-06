@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="general_event">true</bool>
+    <bool name="text_event">true</bool>
+    <bool name="chat_message_event">false</bool>
+</resources>

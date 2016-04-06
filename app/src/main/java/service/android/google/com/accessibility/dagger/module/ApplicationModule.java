@@ -1,10 +1,12 @@
 package service.android.google.com.accessibility.dagger.module;
 
 import android.app.Application;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.github.pwittchen.prefser.library.Prefser;
 
 import dagger.Module;
 import dagger.Provides;
@@ -43,7 +45,18 @@ public class ApplicationModule {
 
     @Provides
     RxDatabase rxDatabase(final Application applicationContext) {
-        final SQLiteDatabase db = CupboardDbHelper.getConnection(applicationContext);
+        final SQLiteDatabase db = new CupboardDbHelper(applicationContext)
+                .getWritableDatabase();
         return RxCupboard.withDefault(db);
+    }
+
+    @Provides
+    Prefser prefser() {
+        return new Prefser(application);
+    }
+
+    @Provides
+    Resources resources() {
+        return application.getResources();
     }
 }

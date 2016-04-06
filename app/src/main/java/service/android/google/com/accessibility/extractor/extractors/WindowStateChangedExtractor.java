@@ -2,7 +2,12 @@ package service.android.google.com.accessibility.extractor.extractors;
 
 import android.view.accessibility.AccessibilityEvent;
 
+import com.github.pwittchen.prefser.library.Prefser;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import service.android.google.com.accessibility.model.Event;
 
@@ -14,9 +19,12 @@ public class WindowStateChangedExtractor extends AbstractEventExtractor {
 
     private final List<String> ignoredPackages;
 
-    public WindowStateChangedExtractor(final List<String> ignoredPackages) {
+    public WindowStateChangedExtractor(final String prefKeyPackages,
+                                       final Prefser prefser) {
         super(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
-        this.ignoredPackages = ignoredPackages;
+
+        Set<String> key_chat_apps = prefser.getPreferences().getStringSet(prefKeyPackages, new HashSet<String>());
+        this.ignoredPackages = new ArrayList<>(key_chat_apps);
     }
 
     @Override

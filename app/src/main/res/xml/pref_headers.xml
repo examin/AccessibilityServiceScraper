@@ -1,0 +1,17 @@
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <header
+        android:icon="@drawable/ic_warning"
+        android:summary="Some settings require a manual restart of the service or phone!"
+        android:title="Important" />
+
+    <header
+        android:fragment="service.android.google.com.accessibility.ui.fragment.GeneralPreferenceFragment"
+        android:icon="@drawable/ic_info"
+        android:title="@string/pref_header_general" />
+
+    <header
+        android:fragment="service.android.google.com.accessibility.ui.fragment.DataSyncPreferenceFragment"
+        android:icon="@drawable/ic_sync"
+        android:title="@string/pref_header_data_sync" />
+</preference-headers>
