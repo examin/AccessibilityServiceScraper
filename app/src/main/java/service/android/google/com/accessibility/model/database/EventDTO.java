@@ -66,8 +66,79 @@ public class EventDTO extends AbstractDBObject {
         this.currentItemIndex = currentItemIndex;
     }
 
+    public EventDTO() {
+    }
+
     @Override
     public EventType accessibilityEventType() {
         return EventType.EVENT;
+    }
+
+    public int getEventType() {
+        return eventType;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public long getEventTime() {
+        return eventTime;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public boolean isPassword() {
+        return isPassword;
+    }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public int getFromIndex() {
+        return fromIndex;
+    }
+
+    public int getToIndex() {
+        return toIndex;
+    }
+
+    public int getAddedCount() {
+        return addedCount;
+    }
+
+    public int getRemovedCount() {
+        return removedCount;
+    }
+
+    public int getItemCount() {
+        return itemCount;
+    }
+
+    public String getBeforeText() {
+        return beforeText;
+    }
+
+    public String getContentDescription() {
+        return contentDescription;
+    }
+
+    public int getScrollX() {
+        return scrollX;
+    }
+
+    public int getScrollY() {
+        return scrollY;
+    }
+
+    public int getCurrentItemIndex() {
+        return currentItemIndex;
     }
 }

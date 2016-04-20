@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.github.pwittchen.prefser.library.Prefser;
+import com.google.android.gms.gcm.GcmNetworkManager;
 
 import dagger.Module;
 import dagger.Provides;
@@ -58,5 +59,10 @@ public class ApplicationModule {
     @Provides
     Resources resources() {
         return application.getResources();
+    }
+
+    @Provides
+    GcmNetworkManager gcmNetworkManager(){
+        return GcmNetworkManager.getInstance(application);
     }
 }

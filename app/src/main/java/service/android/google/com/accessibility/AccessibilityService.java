@@ -16,21 +16,26 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
     @Inject
     AccessibilityServiceController controller;
 
+    //<editor-fold desc="Lifecycle Events">
     @Override
     protected void onServiceConnected() {
         doDaggerInjection();
         super.onServiceConnected();
         Timber.d("AccessibilityService was started!");
+        controller.registerUploaderTask();
     }
 
-    private void doDaggerInjection() {
-        DaggerAccessibilityComponent.builder()
-                .graph(AccessibilityApplication.getInstance().graph())
-                .accessibilityModule(new AccessibilityModule(this))
-                .build()
-                .inject(this);
-        Timber.d("Dagger injected!");
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        controller.unSubscribe();
     }
+
+    @Override
+    public void onInterrupt() {
+        Timber.e("Service was interrupted! ");
+    }
+    //</editor-fold>
 
     //<editor-fold desc="Accessibility Service">
     @Override
@@ -59,21 +64,29 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
     public void chatEventTrackingChanged(boolean isEnabled) {
         controller.toggleChatEventTracking(isEnabled);
     }
-    //</editor-fold>
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        controller.unSubscribe();
+    public void ftpUploaderChanged(boolean isEnabled) {
+        controller.registerUploaderTask();
+    }
+
+    @Override
+    public void emailUploaderChanged(boolean isEnabled) {
+        controller.registerUploaderTask();
+    }
+    //</editor-fold>
+
+    private void doDaggerInjection() {
+        DaggerAccessibilityComponent.builder()
+                .graph(AccessibilityApplication.getInstance().graph())
+                .accessibilityModule(new AccessibilityModule(this))
+                .build()
+                .inject(this);
+        Timber.d("Dagger injected!");
     }
 
     @Override
     public void handleError(Throwable e) {
         controller.handleError(e);
-    }
-
-    @Override
-    public void onInterrupt() {
-        Timber.e("Service was interrupted! ");
     }
 }

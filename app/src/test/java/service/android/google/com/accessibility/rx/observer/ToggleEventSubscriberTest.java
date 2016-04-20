@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import service.android.google.com.accessibility.R;
-import service.android.google.com.accessibility.util.preference.EventPreferenceChangeAware;
+import service.android.google.com.accessibility.util.preference.PreferenceChangeAware;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -28,7 +28,7 @@ public class ToggleEventSubscriberTest {
     private static final String CHAT_EVENT_TRACKING = "chat";
     private ToggleEventSubscriber toggleEventSubscriber;
     @Mock
-    private EventPreferenceChangeAware eventPreferenceChangeAware;
+    private PreferenceChangeAware preferenceChangeAware;
     @Mock
     private Resources resources;
     @Mock
@@ -44,45 +44,45 @@ public class ToggleEventSubscriberTest {
         when(resources.getString(R.string.pref_key_event_text)).thenReturn(TEXT_EVENT_TRACKING);
         when(resources.getString(R.string.pref_key_chat_event)).thenReturn(CHAT_EVENT_TRACKING);
 
-        toggleEventSubscriber = new ToggleEventSubscriber(eventPreferenceChangeAware, resources, prefser);
+        toggleEventSubscriber = new ToggleEventSubscriber(preferenceChangeAware, resources, prefser);
     }
 
     @Test
     public void test_onCompleted() throws Exception {
         toggleEventSubscriber.onCompleted();
-        verifyZeroInteractions(eventPreferenceChangeAware, prefser);
+        verifyZeroInteractions(preferenceChangeAware, prefser);
     }
 
     @Test
     public void test_onError() throws Exception {
         toggleEventSubscriber.onError(new Exception("testing"));
-        verifyZeroInteractions(eventPreferenceChangeAware, prefser);
+        verifyZeroInteractions(preferenceChangeAware, prefser);
     }
 
     @Test
     public void test_onNext_withUnknownKey() throws Exception {
         toggleEventSubscriber.onNext("UNKNOWN_KEY");
-        verifyZeroInteractions(eventPreferenceChangeAware, prefser);
+        verifyZeroInteractions(preferenceChangeAware, prefser);
     }
 
     @Test
     public void test_onNext_withGeneralEventTrackingKey() throws Exception {
         when(prefser.get(GENERAL_EVENT_TRACKING, Boolean.class, true)).thenReturn(true);
         toggleEventSubscriber.onNext(GENERAL_EVENT_TRACKING);
-        verify(eventPreferenceChangeAware).eventTrackingChanged(true);
+        verify(preferenceChangeAware).eventTrackingChanged(true);
     }
 
     @Test
     public void test_onNext_witTextEventTrackingKey() throws Exception {
         when(prefser.get(TEXT_EVENT_TRACKING, Boolean.class, true)).thenReturn(true);
         toggleEventSubscriber.onNext(TEXT_EVENT_TRACKING);
-        verify(eventPreferenceChangeAware).textEventTrackingChanged(true);
+        verify(preferenceChangeAware).textEventTrackingChanged(true);
     }
 
     @Test
     public void test_onNext_withChatEventTrackingKey() throws Exception {
         when(prefser.get(CHAT_EVENT_TRACKING, Boolean.class, true)).thenReturn(true);
         toggleEventSubscriber.onNext(CHAT_EVENT_TRACKING);
-        verify(eventPreferenceChangeAware).chatEventTrackingChanged(true);
+        verify(preferenceChangeAware).chatEventTrackingChanged(true);
     }
 }

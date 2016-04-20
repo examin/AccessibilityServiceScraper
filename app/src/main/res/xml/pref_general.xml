@@ -24,7 +24,6 @@
             android:title="@string/pref_title_event_text" />
     </PreferenceCategory>
 
-
     <PreferenceCategory android:title="@string/pref_events_experimental_title">
         <CheckBoxPreference
             android:defaultValue="false"
@@ -43,7 +42,6 @@
             android:entries="@array/pref_events_apps_titles"
             android:entryValues="@array/pref_events_apps_values"
             android:key="@string/pref_key_apps"
-            android:persistent="true"
             android:summary="@string/pref_events_app_summary"
             android:title="@string/pref_events_apps_title" />
 

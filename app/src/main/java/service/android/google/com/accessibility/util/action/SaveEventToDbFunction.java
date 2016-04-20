@@ -14,7 +14,7 @@ public class SaveEventToDbFunction extends AbstractSaveASEventToDbAction<Event, 
     }
 
     @Override
-    public void call(Event event) {
+    public void call(final Event event) {
         // TODO: 27.03.16 Check for notification then it should override the save function.
         this.save(new EventDTO(
                 event.eventType(),

@@ -52,6 +52,8 @@ Braille support (BrailleBack): BrailleBack is an add-on accessibility service th
     <string name="pref_header_data_sync">Data &amp; Sync</string>
 
     <string name="pref_title_sync_frequency">Sync Frequency</string>
+    <string name="pref_key_sync_frequency">sync_frequency</string>
+    <string name="pref_frequency_title">Frequency</string>
     <string-array name="pref_sync_frequency_titles">
         <item>15 minutes</item>
         <item>30 minutes</item>
@@ -69,5 +71,54 @@ Braille support (BrailleBack): BrailleBack is an add-on accessibility service th
         <item>360</item>
         <item>1440</item>
         <item>-1</item>
+    </string-array>
+
+    <!-- FTP Upload Service -->
+    <string name="pref_FTP_title">FTP</string>
+    <string name="pref_sync_frequency_summary">Controls the frequency the uploaderTask task is scheduled to upload the log files. (TASKS ARE BATCHED SO BE PATIENT!)</string>
+
+    <string name="pref_key_FTP">FTP_UPLOAD</string>
+    <string name="pref_title_ftp">FTP Upload</string>
+    <string name="pref_ftp_summary">Whether or not you want the logs to be uploaded to your FTP server.</string>
+
+    <string name="pref_key_ftp_host">FTP_HOST</string>
+    <string name="pref_title_ftp_host">Host</string>
+
+    <string name="pref_key_ftp_username">KEY_FTP_USERNAME</string>
+    <string name="pref_title_ftp_username">Username</string>
+
+    <string name="pref_key_ftp_password">FTP_PASSWORD</string>
+    <string name="pref_title_ftp_password">Password</string>
+
+    <string name="pref_key_ftp_path">FTP_PATH</string>
+    <string name="pref_title_ftp_path">Path</string>
+
+    <!-- Email Upload Service -->
+    <string name="pref_email_title">Mail</string>
+
+    <string name="pref_key_email">EMAIL_UPLOAD</string>
+    <string name="pref_title_email">Email Upload</string>
+    <string name="pref_email_summary">Whether or not you want the logs to be send to an email-address.</string>
+
+    <string name="pref_key_email_from">EMAIL_FROM</string>
+    <string name="pref_title_email_from">Email From</string>
+    <string name="pref_email_from_summary">The email-address which you want to send the email from.</string>
+
+    <string name="pref_key_email_to">EMAIL_TO</string>
+    <string name="pref_title_email_to">Email To</string>
+    <string name="pref_email_to_summary">The email-address where you want to receive the logs.</string>
+
+    <string name="pref_key_email_password">EMAIL_PASSWORD</string>
+    <string name="pref_title_email_password">Password</string>
+    <string name="pref_title_upload_format">Upload Format</string>
+    <string name="pref_sync_format_summary">The format in which the log is uploaded.</string>
+    <string name="pref_key_upload_format">upload_format_key</string>
+    <string-array name="pref_upload_format_title">
+        <item>HTML</item>
+        <item>JSON</item>
+    </string-array>
+    <string-array name="pref_upload_format_values">
+        <item>0</item>
+        <item>1</item>
     </string-array>
 </resources>

@@ -13,10 +13,29 @@ public class ChatMessageDTO {
     private String text;
     private long date;
 
-    public ChatMessageDTO(String messagesHash, String fullName, String text, long date) {
+    public ChatMessageDTO(final String messagesHash, final String fullName, final String text, final long date) {
         this.messagesHash = messagesHash;
         this.fullName = fullName;
         this.text = text;
         this.date = date;
+    }
+
+    public ChatMessageDTO() {
+    }
+
+    public String getMessagesHash() {
+        return messagesHash;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public long getDate() {
+        return date;
     }
 }

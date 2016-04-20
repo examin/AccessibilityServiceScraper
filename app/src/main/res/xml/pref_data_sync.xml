@@ -1,11 +1,100 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pref_frequency_title">
+        <ListPreference
+            android:defaultValue="1440"
+            android:entries="@array/pref_sync_frequency_titles"
+            android:entryValues="@array/pref_sync_frequency_values"
+            android:key="@string/pref_key_sync_frequency"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:summary="@string/pref_sync_frequency_summary"
+            android:title="@string/pref_title_sync_frequency" />
+    </PreferenceCategory>
 
-    <ListPreference
-        android:defaultValue="180"
-        android:entries="@array/pref_sync_frequency_titles"
-        android:entryValues="@array/pref_sync_frequency_values"
-        android:key="sync_frequency"
-        android:negativeButtonText="@null"
-        android:positiveButtonText="@null"
-        android:title="@string/pref_title_sync_frequency" />
+    <PreferenceCategory android:title="Format">
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/pref_upload_format_title"
+            android:entryValues="@array/pref_upload_format_values"
+            android:key="@string/pref_key_upload_format"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:summary="@string/pref_sync_format_summary"
+            android:title="@string/pref_title_upload_format" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_FTP_title">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_FTP"
+            android:summary="@string/pref_ftp_summary"
+            android:title="@string/pref_title_ftp" />
+
+        <EditTextPreference
+            android:dependency="@string/pref_key_FTP"
+            android:inputType="text"
+            android:key="@string/pref_key_ftp_host"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:title="@string/pref_title_ftp_host" />
+
+        <EditTextPreference
+            android:dependency="@string/pref_key_FTP"
+            android:inputType="text"
+            android:key="@string/pref_key_ftp_username"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:title="@string/pref_title_ftp_username" />
+
+        <EditTextPreference
+            android:dependency="@string/pref_key_FTP"
+            android:inputType="textPassword"
+            android:key="@string/pref_key_ftp_password"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:title="@string/pref_title_ftp_password" />
+
+        <EditTextPreference
+            android:dependency="@string/pref_key_FTP"
+            android:inputType="text"
+            android:key="@string/pref_key_ftp_path"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:title="@string/pref_title_ftp_path" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_email_title">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_email"
+            android:summary="@string/pref_email_summary"
+            android:title="@string/pref_title_email" />
+
+        <EditTextPreference
+            android:dependency="@string/pref_key_email"
+            android:inputType="textEmailAddress"
+            android:key="@string/pref_key_email_from"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:summary="@string/pref_email_from_summary"
+            android:title="@string/pref_title_email_from" />
+
+        <EditTextPreference
+            android:dependency="@string/pref_key_email"
+            android:inputType="textPassword"
+            android:key="@string/pref_key_email_password"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:title="@string/pref_title_email_password" />
+
+        <EditTextPreference
+            android:defaultValue="@string/pref_key_email_from"
+            android:dependency="@string/pref_key_email"
+            android:inputType="textEmailAddress"
+            android:key="@string/pref_key_email_to"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:summary="@string/pref_email_to_summary"
+            android:title="@string/pref_title_email_to" />
+    </PreferenceCategory>
 </PreferenceScreen>
