@@ -8,6 +8,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import nl.nl2312.rxcupboard.RxDatabase;
 import service.android.google.com.accessibility.extractor.EventExtractor;
+import service.android.google.com.accessibility.extractor.NotificationExtractor;
 import service.android.google.com.accessibility.scraper.WindowRipper;
 
 import static junit.framework.Assert.assertNotNull;
@@ -23,6 +24,8 @@ public class FunctionFactoryTest {
     private EventExtractor eventExtractor;
     @Mock
     private WindowRipper windowRipper;
+    @Mock
+    private NotificationExtractor notificationExtractor;
     @Mock
     private RxDatabase rxDatabase;
 
@@ -54,5 +57,10 @@ public class FunctionFactoryTest {
     @Test
     public void testFilterNullChatEventsFunction() throws Exception {
         assertNotNull(functionFactory.filterNullChatEventsFunction());
+    }
+
+    @Test
+    public void testMapAccessibilityEventToNotificationFunction() throws Exception {
+        assertNotNull(functionFactory.getMapAccessibilityEventToNotificationFunction(notificationExtractor));
     }
 }

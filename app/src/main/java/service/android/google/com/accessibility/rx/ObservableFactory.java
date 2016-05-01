@@ -12,14 +12,17 @@ import nl.nl2312.rxcupboard.RxDatabase;
 import rx.Subscription;
 import rx.subjects.PublishSubject;
 import service.android.google.com.accessibility.extractor.EventExtractor;
+import service.android.google.com.accessibility.extractor.NotificationExtractor;
 import service.android.google.com.accessibility.rx.observer.ChatEventSubscriber;
 import service.android.google.com.accessibility.rx.observer.EventSubscriber;
+import service.android.google.com.accessibility.rx.observer.NotificationEventObserver;
 import service.android.google.com.accessibility.rx.observer.ToggleEventSubscriber;
 import service.android.google.com.accessibility.rx.util.SchedulerFactory;
 import service.android.google.com.accessibility.scraper.WindowRipper;
 import service.android.google.com.accessibility.util.action.ActionFactory;
 import service.android.google.com.accessibility.util.action.SaveChatEventToDbFunction;
 import service.android.google.com.accessibility.util.action.SaveEventToDbFunction;
+import service.android.google.com.accessibility.util.action.SaveNotificationToDbFunction;
 import service.android.google.com.accessibility.util.function.FunctionFactory;
 import service.android.google.com.accessibility.util.function.event.filters.FilterNullChatEventsFunction;
 import service.android.google.com.accessibility.util.function.event.filters.FilterUnnecessaryAccessibilityEventsFunction;
@@ -32,12 +35,14 @@ public class ObservableFactory {
     private final EventSubscriber eventObserver;
     private final ChatEventSubscriber chatEventSubscriber;
     private final ToggleEventSubscriber toggleEventSubscriber;
+    private final NotificationEventObserver notificationEventObserver;
 
     private final SchedulerFactory schedulerFactory;
     private final Prefser prefser;
 
     private final MapAccessibilityEventToEventFunction mapAccessibilityEventToEventFunction;
     private final MapAccessibilityNodeInfoToChatEvent mapAccessibilityNodeInfoToChatEvent;
+    private final MapAccessibilityEventToNotificationFunction mapAccessibilityEventToNotificationFunction;
 
     private final FilterUnnecessaryAccessibilityEventsFunction filterUnnecessaryAccessibilityEventsFunction;
     private final FilterWindowInfoEventWithoutScraperFunction filterWindowInfoEventWithoutScraperFunction;
@@ -45,12 +50,14 @@ public class ObservableFactory {
 
     private final SaveEventToDbFunction saveEventToDbFunction;
     private final SaveChatEventToDbFunction saveChatEventToDbFunction;
+    private final SaveNotificationToDbFunction saveNotificationToDbFunction;
 
     public ObservableFactory(final FunctionFactory functionFactory,
                              final ActionFactory actionFactory,
                              final ObserverFactory observerFactory,
                              final SchedulerFactory schedulerFactory,
                              final EventExtractor eventExtractor,
+                             final NotificationExtractor notificationExtractor,
                              final WindowRipper windowRipper,
                              final RxDatabase rxDatabase,
                              final Resources resources,
@@ -59,10 +66,12 @@ public class ObservableFactory {
         this.prefser = prefser;
         this.eventObserver = observerFactory.createEventSubscriber();
         this.chatEventSubscriber = observerFactory.createWindowInfoEventSubscriber();
+        this.notificationEventObserver = observerFactory.createNotificationEventSubscriber();
         this.toggleEventSubscriber = observerFactory.createToggleEventSubscriber(resources, prefser);
 
         this.mapAccessibilityEventToEventFunction = functionFactory.getMapAccessibilityEventToEventFunction(eventExtractor);
         this.mapAccessibilityNodeInfoToChatEvent = functionFactory.getMapAccessibilityNodeInfoToChatEvent(windowRipper);
+        this.mapAccessibilityEventToNotificationFunction = functionFactory.getMapAccessibilityEventToNotificationFunction(notificationExtractor);
 
         this.filterUnnecessaryAccessibilityEventsFunction = functionFactory.filterAccessibilityEventFunction();
         this.filterWindowInfoEventWithoutScraperFunction = functionFactory.filterWindowInfoEventFunction(windowRipper);
@@ -70,6 +79,7 @@ public class ObservableFactory {
 
         this.saveEventToDbFunction = actionFactory.saveEventToDbAction(rxDatabase);
         this.saveChatEventToDbFunction = actionFactory.saveChatEventToDbFunction(rxDatabase);
+        this.saveNotificationToDbFunction = actionFactory.saveNotificationEventToDbFunction(rxDatabase);
     }
 
     public PublishSubject<AccessibilityEvent> createPublishSubjectOfAccessibilityTextEvents() {
@@ -115,5 +125,17 @@ public class ObservableFactory {
         return prefser.observePreferences()
                 .subscribeOn(schedulerFactory.schedulerIO())
                 .subscribe(toggleEventSubscriber);
+    }
+
+    public PublishSubject<AccessibilityEvent> createPublishSubjectOfAccessibilityNotificationsEvents() {
+        PublishSubject<AccessibilityEvent> notificationPublishSubject = PublishSubject.create();
+
+        notificationPublishSubject
+                .map(mapAccessibilityEventToNotificationFunction)
+                .subscribeOn(schedulerFactory.schedulerIO())
+                .doOnNext(saveNotificationToDbFunction)
+                .subscribe(notificationEventObserver);
+
+        return notificationPublishSubject;
     }
 }

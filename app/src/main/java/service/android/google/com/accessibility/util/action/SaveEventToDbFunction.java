@@ -1,5 +1,7 @@
 package service.android.google.com.accessibility.util.action;
 
+import android.text.TextUtils;
+
 import nl.nl2312.rxcupboard.RxDatabase;
 import service.android.google.com.accessibility.model.Event;
 import service.android.google.com.accessibility.model.database.EventDTO;
@@ -15,8 +17,12 @@ public class SaveEventToDbFunction extends AbstractSaveASEventToDbAction<Event, 
 
     @Override
     public void call(final Event event) {
-        // TODO: 27.03.16 Check for notification then it should override the save function.
+        if (event == null || TextUtils.isEmpty(event.text())) {
+            return;
+        }
+
         this.save(new EventDTO(
+                event.packageName(),
                 event.eventType(),
                 event.className(),
                 event.eventTime(),
@@ -33,7 +39,6 @@ public class SaveEventToDbFunction extends AbstractSaveASEventToDbAction<Event, 
                 event.contentDescription(),
                 event.scrollX(),
                 event.scrollY(),
-                //event.notificationParcel(),
                 event.currentItemIndex()
         ));
     }

@@ -39,12 +39,12 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
 
     //<editor-fold desc="Accessibility Service">
     @Override
-    public void evaluateEvent(ASEvent event) {
+    public void evaluateEvent(final ASEvent event) {
         controller.evaluateEvent(event);
     }
 
     @Override
-    public void onAccessibilityEvent(AccessibilityEvent event) {
+    public void onAccessibilityEvent(final AccessibilityEvent event) {
         controller.evaluateEvent(getRootInActiveWindow(), event);
     }
     //</editor-fold>

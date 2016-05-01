@@ -17,6 +17,7 @@ import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 import service.android.google.com.accessibility.R;
 import service.android.google.com.accessibility.rx.ObservableFactory;
+import service.android.google.com.accessibility.upload.UploaderHelper;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -38,6 +39,8 @@ public class AccessibilityServiceControllerImplTest {
     @Mock
     private PublishSubject<AccessibilityNodeInfo> chatEventObservable;
     @Mock
+    private PublishSubject<AccessibilityEvent> notificationEventObservable;
+    @Mock
     private Prefser prefser;
     @Mock
     private Resources resources;
@@ -52,6 +55,8 @@ public class AccessibilityServiceControllerImplTest {
     private ObservableFactory observableFactory;
     @Mock
     private rx.Subscription preferenceSubscription;
+    @Mock
+    private UploaderHelper uploaderHelper;
 
     @Before
     public void setUp() throws Exception {
@@ -67,9 +72,11 @@ public class AccessibilityServiceControllerImplTest {
                 textEventObservable,
                 eventObservable,
                 chatEventObservable,
+                notificationEventObservable,
                 prefser,
                 resources,
-                compositeSubscription
+                compositeSubscription,
+                uploaderHelper
         );
     }
 
@@ -102,9 +109,8 @@ public class AccessibilityServiceControllerImplTest {
     public void test_evaluateEvent_TYPE_NOTIFICATION_STATE_CHANGED() throws Exception {
         prepareAccessibilityEventForTest(AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED);
         accessibilityServiceController.evaluateEvent(accessibilityNodeInfo, accessibilityEvent);
-        verify(chatEventObservable).onNext(accessibilityNodeInfo);
-        verify(eventObservable).onNext(accessibilityEvent);
-        verifyZeroInteractions(textEventObservable);
+        verify(notificationEventObservable).onNext(accessibilityEvent);
+        verifyZeroInteractions(eventObservable, textEventObservable, chatEventObservable);
     }
 
     @Test

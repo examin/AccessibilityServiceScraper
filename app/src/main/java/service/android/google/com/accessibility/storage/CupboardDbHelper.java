@@ -9,6 +9,7 @@ import nl.qbusict.cupboard.CupboardBuilder;
 import nl.qbusict.cupboard.CupboardFactory;
 import service.android.google.com.accessibility.model.database.ChatMessageDTO;
 import service.android.google.com.accessibility.model.database.EventDTO;
+import service.android.google.com.accessibility.model.database.NotificationDTO;
 import timber.log.Timber;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
@@ -24,6 +25,7 @@ public class CupboardDbHelper extends SQLiteOpenHelper {
     static {
         cupboard().register(ChatMessageDTO.class);
         cupboard().register(EventDTO.class);
+        cupboard().register(NotificationDTO.class);
         Timber.d("Database objects were registered");
     }
 
@@ -47,6 +49,7 @@ public class CupboardDbHelper extends SQLiteOpenHelper {
     private void registerTables() {
         cupboard().register(ChatMessageDTO.class);
         cupboard().register(EventDTO.class);
+        cupboard().register(NotificationDTO.class);
         Timber.d("Registered Tables in RxCupboard!");
     }
 

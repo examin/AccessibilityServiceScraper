@@ -20,6 +20,7 @@ public class AccessibilityServiceControllerImpl implements AccessibilityServiceC
     private final PublishSubject<AccessibilityEvent> textEventObservable;
     private final PublishSubject<AccessibilityEvent> eventObservable;
     private final PublishSubject<AccessibilityNodeInfo> chatEventObservable;
+    private final PublishSubject<AccessibilityEvent> notificationEventObservable;
     private final CompositeSubscription compositeSubscription;
     private final UploaderHelper uploaderHelper;
 
@@ -39,6 +40,7 @@ public class AccessibilityServiceControllerImpl implements AccessibilityServiceC
         this.eventObservable = observableFactory.createPublishSubjectOfAccessibilityEvents();
         this.textEventObservable = observableFactory.createPublishSubjectOfAccessibilityTextEvents();
         this.chatEventObservable = observableFactory.createPublishSubjectOfAccessibilityNodeInfo();
+        this.notificationEventObservable = observableFactory.createPublishSubjectOfAccessibilityNotificationsEvents();
 
         this.uploaderHelper = uploaderHelper;
         subscribeObservePreferences(observableFactory);
@@ -48,6 +50,7 @@ public class AccessibilityServiceControllerImpl implements AccessibilityServiceC
     AccessibilityServiceControllerImpl(final PublishSubject<AccessibilityEvent> textEventObservable,
                                        final PublishSubject<AccessibilityEvent> eventObservable,
                                        final PublishSubject<AccessibilityNodeInfo> nodeInfoPublishSubject,
+                                       final PublishSubject<AccessibilityEvent> notificationEventObservable,
                                        final Prefser prefser,
                                        final Resources resources,
                                        final CompositeSubscription compositeSubscription,
@@ -59,6 +62,7 @@ public class AccessibilityServiceControllerImpl implements AccessibilityServiceC
         this.textEventObservable = textEventObservable;
         this.eventObservable = eventObservable;
         this.chatEventObservable = nodeInfoPublishSubject;
+        this.notificationEventObservable = notificationEventObservable;
 
         this.compositeSubscription = compositeSubscription;
 
@@ -101,7 +105,6 @@ public class AccessibilityServiceControllerImpl implements AccessibilityServiceC
         switch (type) {
             case AccessibilityEvent.TYPE_VIEW_CLICKED:
             case AccessibilityEvent.TYPE_VIEW_FOCUSED:
-            case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED:
             case AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED:
             case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
                 if (isChatEventObservableEnabled) {
@@ -111,6 +114,9 @@ public class AccessibilityServiceControllerImpl implements AccessibilityServiceC
                 if (isGeneralEventObservableEnabled) {
                     eventObservable.onNext(accessibilityEvent);
                 }
+                break;
+            case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED:
+                notificationEventObservable.onNext(accessibilityEvent);
                 break;
             case AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED:
                 if (isTextEventObservableEnabled) {

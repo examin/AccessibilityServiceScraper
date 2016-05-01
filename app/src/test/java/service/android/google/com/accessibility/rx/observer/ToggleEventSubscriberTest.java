@@ -26,6 +26,9 @@ public class ToggleEventSubscriberTest {
     private static final String GENERAL_EVENT_TRACKING = "general";
     private static final String TEXT_EVENT_TRACKING = "text";
     private static final String CHAT_EVENT_TRACKING = "chat";
+    private static final String FTP_UPLOAD = "ftp_upload";
+    private static final String EMAIL_UPLOAD = "email_upload";
+
     private ToggleEventSubscriber toggleEventSubscriber;
     @Mock
     private PreferenceChangeAware preferenceChangeAware;
@@ -43,6 +46,8 @@ public class ToggleEventSubscriberTest {
         when(resources.getString(R.string.pref_key_event_general)).thenReturn(GENERAL_EVENT_TRACKING);
         when(resources.getString(R.string.pref_key_event_text)).thenReturn(TEXT_EVENT_TRACKING);
         when(resources.getString(R.string.pref_key_chat_event)).thenReturn(CHAT_EVENT_TRACKING);
+        when(resources.getString(R.string.pref_key_FTP)).thenReturn(FTP_UPLOAD);
+        when(resources.getString(R.string.pref_key_email)).thenReturn(EMAIL_UPLOAD);
 
         toggleEventSubscriber = new ToggleEventSubscriber(preferenceChangeAware, resources, prefser);
     }

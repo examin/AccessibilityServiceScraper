@@ -17,4 +17,8 @@ public class ActionFactory {
     public SaveChatEventToDbFunction saveChatEventToDbFunction(final RxDatabase rxDatabase) {
         return new SaveChatEventToDbFunction(rxDatabase);
     }
+
+    public SaveNotificationToDbFunction saveNotificationEventToDbFunction(final RxDatabase rxDatabase) {
+        return new SaveNotificationToDbFunction(rxDatabase);
+    }
 }

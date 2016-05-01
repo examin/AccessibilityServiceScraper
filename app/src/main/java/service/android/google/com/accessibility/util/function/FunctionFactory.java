@@ -1,6 +1,8 @@
 package service.android.google.com.accessibility.util.function;
 
 import service.android.google.com.accessibility.extractor.EventExtractor;
+import service.android.google.com.accessibility.extractor.NotificationExtractor;
+import service.android.google.com.accessibility.rx.MapAccessibilityEventToNotificationFunction;
 import service.android.google.com.accessibility.scraper.WindowRipper;
 import service.android.google.com.accessibility.util.function.event.filters.FilterNullChatEventsFunction;
 import service.android.google.com.accessibility.util.function.event.filters.FilterUnnecessaryAccessibilityEventsFunction;
@@ -31,5 +33,9 @@ public class FunctionFactory {
 
     public FilterNullChatEventsFunction filterNullChatEventsFunction() {
         return new FilterNullChatEventsFunction();
+    }
+
+    public MapAccessibilityEventToNotificationFunction getMapAccessibilityEventToNotificationFunction(final NotificationExtractor notificationExtractor) {
+        return new MapAccessibilityEventToNotificationFunction(notificationExtractor);
     }
 }

@@ -1,11 +1,12 @@
 package service.android.google.com.accessibility.model.database;
 
 import nl.qbusict.cupboard.annotation.Index;
+import service.android.google.com.accessibility.model.EventType;
 
 /**
  * Created by tim on 27.03.16.
  */
-public class ChatMessageDTO {
+public class ChatMessageDTO extends AbstractDBObject {
 
     @Index(unique = true)
     private String messagesHash;
@@ -37,5 +38,10 @@ public class ChatMessageDTO {
 
     public long getDate() {
         return date;
+    }
+
+    @Override
+    public EventType accessibilityEventType() {
+        return EventType.CHAT_EVENT;
     }
 }

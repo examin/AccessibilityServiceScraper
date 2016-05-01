@@ -7,6 +7,7 @@ import service.android.google.com.accessibility.model.EventType;
  */
 public class EventDTO extends AbstractDBObject {
 
+    private String packageName;
     private int eventType;
     private String className;
     private long eventTime;
@@ -24,10 +25,10 @@ public class EventDTO extends AbstractDBObject {
     private String contentDescription;
     private int scrollX;
     private int scrollY;
-    //private Parcelable notificationParcel;
     private int currentItemIndex;
 
-    public EventDTO(int eventType,
+    public EventDTO(String packageName,
+                    int eventType,
                     String className,
                     long eventTime,
                     String text,
@@ -43,8 +44,8 @@ public class EventDTO extends AbstractDBObject {
                     String contentDescription,
                     int scrollX,
                     int scrollY,
-                    //Parcelable notificationParcel,
                     int currentItemIndex) {
+        this.packageName = packageName;
         this.eventType = eventType;
         this.className = className;
         this.eventTime = eventTime;
@@ -61,8 +62,6 @@ public class EventDTO extends AbstractDBObject {
         this.contentDescription = contentDescription;
         this.scrollX = scrollX;
         this.scrollY = scrollY;
-        // TODO: 27.03.16 Rip the NotificiationParcel
-        //this.notificationParcel = notificationParcel;
         this.currentItemIndex = currentItemIndex;
     }
 
@@ -74,71 +73,147 @@ public class EventDTO extends AbstractDBObject {
         return EventType.EVENT;
     }
 
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
     public int getEventType() {
         return eventType;
+    }
+
+    public void setEventType(int eventType) {
+        this.eventType = eventType;
     }
 
     public String getClassName() {
         return className;
     }
 
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
     public long getEventTime() {
         return eventTime;
+    }
+
+    public void setEventTime(long eventTime) {
+        this.eventTime = eventTime;
     }
 
     public String getText() {
         return text;
     }
 
+    public void setText(String text) {
+        this.text = text;
+    }
+
     public boolean isEnabled() {
         return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
     }
 
     public boolean isPassword() {
         return isPassword;
     }
 
+    public void setPassword(boolean password) {
+        isPassword = password;
+    }
+
     public boolean isChecked() {
         return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 
     public int getFromIndex() {
         return fromIndex;
     }
 
+    public void setFromIndex(int fromIndex) {
+        this.fromIndex = fromIndex;
+    }
+
     public int getToIndex() {
         return toIndex;
+    }
+
+    public void setToIndex(int toIndex) {
+        this.toIndex = toIndex;
     }
 
     public int getAddedCount() {
         return addedCount;
     }
 
+    public void setAddedCount(int addedCount) {
+        this.addedCount = addedCount;
+    }
+
     public int getRemovedCount() {
         return removedCount;
+    }
+
+    public void setRemovedCount(int removedCount) {
+        this.removedCount = removedCount;
     }
 
     public int getItemCount() {
         return itemCount;
     }
 
+    public void setItemCount(int itemCount) {
+        this.itemCount = itemCount;
+    }
+
     public String getBeforeText() {
         return beforeText;
+    }
+
+    public void setBeforeText(String beforeText) {
+        this.beforeText = beforeText;
     }
 
     public String getContentDescription() {
         return contentDescription;
     }
 
+    public void setContentDescription(String contentDescription) {
+        this.contentDescription = contentDescription;
+    }
+
     public int getScrollX() {
         return scrollX;
+    }
+
+    public void setScrollX(int scrollX) {
+        this.scrollX = scrollX;
     }
 
     public int getScrollY() {
         return scrollY;
     }
 
+    public void setScrollY(int scrollY) {
+        this.scrollY = scrollY;
+    }
+
     public int getCurrentItemIndex() {
         return currentItemIndex;
+    }
+
+    public void setCurrentItemIndex(int currentItemIndex) {
+        this.currentItemIndex = currentItemIndex;
     }
 }

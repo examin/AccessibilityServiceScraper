@@ -35,4 +35,9 @@ public class ActionFactoryTest {
     public void test_saveChatEventToDbFunction() throws Exception {
         assertNotNull(actionFactory.saveChatEventToDbFunction(rxDatabase));
     }
+
+    @Test
+    public void test_saveNotificationEventToDbFunction() throws Exception {
+        assertNotNull(actionFactory.saveNotificationEventToDbFunction(rxDatabase));
+    }
 }

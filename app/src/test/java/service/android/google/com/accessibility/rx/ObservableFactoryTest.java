@@ -19,14 +19,17 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.subjects.PublishSubject;
 import service.android.google.com.accessibility.extractor.EventExtractor;
+import service.android.google.com.accessibility.extractor.NotificationExtractor;
 import service.android.google.com.accessibility.rx.observer.ChatEventSubscriber;
 import service.android.google.com.accessibility.rx.observer.EventSubscriber;
+import service.android.google.com.accessibility.rx.observer.NotificationEventObserver;
 import service.android.google.com.accessibility.rx.observer.ToggleEventSubscriber;
 import service.android.google.com.accessibility.rx.util.SchedulerFactory;
 import service.android.google.com.accessibility.scraper.WindowRipper;
 import service.android.google.com.accessibility.util.action.ActionFactory;
 import service.android.google.com.accessibility.util.action.SaveChatEventToDbFunction;
 import service.android.google.com.accessibility.util.action.SaveEventToDbFunction;
+import service.android.google.com.accessibility.util.action.SaveNotificationToDbFunction;
 import service.android.google.com.accessibility.util.function.FunctionFactory;
 import service.android.google.com.accessibility.util.function.event.filters.FilterNullChatEventsFunction;
 import service.android.google.com.accessibility.util.function.event.filters.FilterUnnecessaryAccessibilityEventsFunction;
@@ -57,13 +60,17 @@ public class ObservableFactoryTest {
     @Mock
     private EventExtractor eventExtractor;
     @Mock
+    private NotificationExtractor notificationExtractor;
+    @Mock
     private WindowRipper windowRipper;
     @Mock
-    private EventSubscriber eventSubsriber;
+    private EventSubscriber eventSubscriber;
     @Mock
     private ChatEventSubscriber windowEventSubscriber;
     @Mock
     private MapAccessibilityEventToEventFunction mapAccessibilityEventToEventFunction;
+    @Mock
+    private MapAccessibilityEventToNotificationFunction mapAccessibilityEventToNotificationFunction;
     @Mock
     private MapAccessibilityNodeInfoToChatEvent mapAccessibilityNodeInfoToChatEvent;
     @Mock
@@ -83,6 +90,8 @@ public class ObservableFactoryTest {
     @Mock
     private SaveChatEventToDbFunction saveChatEventToDbFunction;
     @Mock
+    private SaveNotificationToDbFunction saveNotificationToDbFunction;
+    @Mock
     private Resources resources;
     @Mock
     private Prefser prefser;
@@ -92,6 +101,8 @@ public class ObservableFactoryTest {
     private ToggleEventSubscriber toggleEventSubscriber;
     @Mock
     private rx.Subscription toggleEventSubscription;
+    @Mock
+    private NotificationEventObserver notificationEventSubscriber;
 
     @Before
     public void setUp() throws Exception {
@@ -99,13 +110,16 @@ public class ObservableFactoryTest {
 
         when(actionFactory.saveEventToDbAction(rxDatabase)).thenReturn(saveEventToDbFunction);
         when(actionFactory.saveChatEventToDbFunction(rxDatabase)).thenReturn(saveChatEventToDbFunction);
+        when(actionFactory.saveNotificationEventToDbFunction(rxDatabase)).thenReturn(saveNotificationToDbFunction);
 
-        when(observerFactory.createEventSubscriber()).thenReturn(eventSubsriber);
+        when(observerFactory.createEventSubscriber()).thenReturn(eventSubscriber);
         when(observerFactory.createWindowInfoEventSubscriber()).thenReturn(windowEventSubscriber);
         when(observerFactory.createToggleEventSubscriber(resources, prefser)).thenReturn(toggleEventSubscriber);
+        when(observerFactory.createNotificationEventSubscriber()).thenReturn(notificationEventSubscriber);
 
         when(functionFactory.getMapAccessibilityEventToEventFunction(eventExtractor)).thenReturn(mapAccessibilityEventToEventFunction);
         when(functionFactory.getMapAccessibilityNodeInfoToChatEvent(windowRipper)).thenReturn(mapAccessibilityNodeInfoToChatEvent);
+        when(functionFactory.getMapAccessibilityEventToNotificationFunction(notificationExtractor)).thenReturn(mapAccessibilityEventToNotificationFunction);
 
         when(functionFactory.filterAccessibilityEventFunction()).thenReturn(filterUnnecessaryAccessibilityEventsFunction);
         when(functionFactory.filterWindowInfoEventFunction(windowRipper)).thenReturn(filterWindowInfoEventWithoutScraperFunction);
@@ -119,6 +133,7 @@ public class ObservableFactoryTest {
                 observerFactory,
                 schedulerFactory,
                 eventExtractor,
+                notificationExtractor,
                 windowRipper,
                 rxDatabase,
                 resources,
@@ -165,7 +180,7 @@ public class ObservableFactoryTest {
     public void test_createPublishSubjectOfAccessibilityTextEvents_shouldSetSubscriber() throws Exception {
         final PublishSubject textPublishSubject = prepareAccessibilityTextEvent();
         observableFactory.createPublishSubjectOfAccessibilityTextEvents();
-        verify(textPublishSubject).subscribe(eventSubsriber);
+        verify(textPublishSubject).subscribe(eventSubscriber);
     }
 
     private PublishSubject prepareAccessibilityTextEvent() {
@@ -220,7 +235,7 @@ public class ObservableFactoryTest {
     public void test_createPublishSubjectOfAccessibilityEvents_shouldSetSubscriber() throws Exception {
         final PublishSubject accessibilityEventObservable = prepareAccessibilityEvent();
         observableFactory.createPublishSubjectOfAccessibilityEvents();
-        verify(accessibilityEventObservable).subscribe(eventSubsriber);
+        verify(accessibilityEventObservable).subscribe(eventSubscriber);
     }
 
     private PublishSubject prepareAccessibilityEvent() {
@@ -331,6 +346,53 @@ public class ObservableFactoryTest {
     private void prepareToggleEventObservable() {
         when(preferencesObservable.subscribeOn(ioScheduler)).thenReturn(preferencesObservable);
         when(preferencesObservable.subscribe(toggleEventSubscriber)).thenReturn(toggleEventSubscription);
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Notification Observer">
+    @Test
+    public void test_createPublishSubjectOfAccessibilityNotificationsEvents() throws Exception {
+        final PublishSubject notificationPublishSubject = prepareAccessibilityNotificationEventObservable();
+        assertThat(observableFactory.createPublishSubjectOfAccessibilityNotificationsEvents(), is(notificationPublishSubject));
+    }
+
+    @Test
+    public void test_createPublishSubjectOfAccessibilityNotificationsEvents_shouldMapEventToNotificationEvents() throws Exception {
+        final PublishSubject notificationPublishSubject = prepareAccessibilityNotificationEventObservable();
+        observableFactory.createPublishSubjectOfAccessibilityNotificationsEvents();
+        verify(notificationPublishSubject).map(mapAccessibilityEventToNotificationFunction);
+    }
+
+    @Test
+    public void test_createPublishSubjectOfAccessibilityNotificationsEvents_shouldSubscribeOnIOThread() throws Exception {
+        final PublishSubject notificationPublishSubject = prepareAccessibilityNotificationEventObservable();
+        observableFactory.createPublishSubjectOfAccessibilityNotificationsEvents();
+        verify(notificationPublishSubject).subscribeOn(ioScheduler);
+    }
+
+    @Test
+    public void test_createPublishSubjectOfAccessibilityNotificationsEvents_shouldSaveNotificationToDb() throws Exception {
+        final PublishSubject notificationPublishSubject = prepareAccessibilityNotificationEventObservable();
+        observableFactory.createPublishSubjectOfAccessibilityNotificationsEvents();
+        verify(notificationPublishSubject).doOnNext(saveNotificationToDbFunction);
+    }
+
+    @Test
+    public void test_createPublishSubjectOfAccessibilityNotificationsEvents_shouldSubscribe() throws Exception {
+        final PublishSubject notificationPublishSubject = prepareAccessibilityNotificationEventObservable();
+        observableFactory.createPublishSubjectOfAccessibilityNotificationsEvents();
+        verify(notificationPublishSubject).subscribe(notificationEventSubscriber);
+    }
+
+    private PublishSubject prepareAccessibilityNotificationEventObservable() {
+        PowerMockito.mockStatic(PublishSubject.class);
+        PublishSubject accessibilityNotification = PowerMockito.mock(PublishSubject.class);
+        when(accessibilityNotification.map(mapAccessibilityEventToNotificationFunction)).thenReturn(accessibilityNotification);
+        when(accessibilityNotification.subscribeOn(ioScheduler)).thenReturn(accessibilityNotification);
+        when(accessibilityNotification.doOnNext(saveNotificationToDbFunction)).thenReturn(accessibilityNotification);
+        when(accessibilityNotification.subscribe(notificationEventSubscriber)).thenReturn(mock(Subscriber.class));
+        when(PublishSubject.create()).thenReturn(accessibilityNotification);
+        return accessibilityNotification;
     }
     //</editor-fold>
 }

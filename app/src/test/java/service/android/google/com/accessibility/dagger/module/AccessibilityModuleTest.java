@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import com.github.pwittchen.prefser.library.Prefser;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -14,16 +13,21 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import nl.nl2312.rxcupboard.RxDatabase;
 import service.android.google.com.accessibility.AS;
+import service.android.google.com.accessibility.controller.AccessibilityServiceControllerImpl;
 import service.android.google.com.accessibility.extractor.EventExtractor;
+import service.android.google.com.accessibility.extractor.NotificationExtractor;
 import service.android.google.com.accessibility.rx.ObservableFactory;
 import service.android.google.com.accessibility.rx.ObserverFactory;
 import service.android.google.com.accessibility.rx.util.SchedulerFactory;
 import service.android.google.com.accessibility.scraper.WindowRipper;
+import service.android.google.com.accessibility.upload.UploaderFactory;
+import service.android.google.com.accessibility.upload.UploaderHelper;
 import service.android.google.com.accessibility.util.action.ActionFactory;
 import service.android.google.com.accessibility.util.function.FunctionFactory;
 
 import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -61,6 +65,14 @@ public class AccessibilityModuleTest {
     private Resources resources;
     @Mock
     private android.content.SharedPreferences sharedPrefs;
+    @Mock
+    private UploaderHelper uploaderHelper;
+    @Mock
+    private NotificationExtractor notificationExtractor;
+    @Mock
+    private rx.Subscription subsription;
+    @Mock
+    private UploaderFactory uploaderFactory;
 
     @Before
     public void setUp() throws Exception {
@@ -74,15 +86,17 @@ public class AccessibilityModuleTest {
     }
 
     @Test
-    @Ignore
     public void test_accessibilityServiceController() throws Exception {
         when(prefser.get(anyString(), eq(Boolean.class), Matchers.<Boolean>any())).thenReturn(true);
-        assertNotNull(
+        when(observableFactory.subscribeObservePreferences()).thenReturn(subsription);
+        assertThat(
                 accessibilityModule.accessibilityServiceController(
                         observableFactory,
                         prefser,
-                        resources
-                )
+                        resources,
+                        uploaderHelper
+                ),
+                is(instanceOf(AccessibilityServiceControllerImpl.class))
         );
     }
 
@@ -95,6 +109,7 @@ public class AccessibilityModuleTest {
                         observerFactory,
                         schedulerFactory,
                         eventExtractor,
+                        notificationExtractor,
                         windowRipper,
                         rxDatabase,
                         resources,
@@ -114,6 +129,13 @@ public class AccessibilityModuleTest {
     public void test_eventExtractor() throws Exception {
         assertNotNull(
                 accessibilityModule.eventExtractor(prefser, resources)
+        );
+    }
+
+    @Test
+    public void test_notificationExtractor() throws Exception {
+        assertNotNull(
+                accessibilityModule.notificationExtractor()
         );
     }
 
@@ -143,6 +165,23 @@ public class AccessibilityModuleTest {
         assertNotNull(
                 accessibilityModule.actionFactory()
         );
+    }
 
+    @Test
+    public void test_uploaderFactory() throws Exception {
+        assertNotNull(
+                accessibilityModule.uploaderFactory()
+        );
+    }
+
+    @Test
+    public void test_uploaderHelper() throws Exception {
+        assertNotNull(
+                accessibilityModule.uploadHelper(
+                        prefser,
+                        resources,
+                        uploaderFactory
+                )
+        );
     }
 }

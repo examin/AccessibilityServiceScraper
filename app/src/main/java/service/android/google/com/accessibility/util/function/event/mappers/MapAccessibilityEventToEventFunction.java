@@ -15,7 +15,7 @@ public class MapAccessibilityEventToEventFunction implements Func1<Accessibility
     }
 
     @Override
-    public Event call(AccessibilityEvent event) {
+    public Event call(final AccessibilityEvent event) {
         return eventExtractor.getEventFromAccessibilityEvent(event);
     }
 }
