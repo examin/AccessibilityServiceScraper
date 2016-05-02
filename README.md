@@ -11,6 +11,7 @@ This project is a (slow) work in progress. However pull requests are welcome!
 * Generating HTML rapport.
 * Periodic uploading via e-mail or FTP
 * IM rippers
+* Saves all notifications from all apps
 
 # Rippers
 * [Facebook Messenger](https://play.google.com/store/apps/details?id=com.facebook.orca)
